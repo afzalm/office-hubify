@@ -9,6 +9,9 @@ import Dashboard from "./pages/Dashboard";
 import Timesheet from "./pages/Timesheet";
 import Projects from "./pages/Projects";
 import Analytics from "./pages/Analytics";
+import AIAssistant from "./pages/AIAssistant";
+import DocumentManager from "./pages/DocumentManager";
+import HandyTools from "./pages/HandyTools";
 import NotFound from "./pages/NotFound";
 import AppLayout from "./components/layout/AppLayout";
 
@@ -29,6 +32,9 @@ const App = () => (
             <Route path="/timesheet" element={<Timesheet />} />
             <Route path="/projects" element={<Projects />} />
             <Route path="/analytics" element={<Analytics />} />
+            <Route path="/ai-assistant" element={<AIAssistant />} />
+            <Route path="/document-manager" element={<DocumentManager />} />
+            <Route path="/handy-tools" element={<HandyTools />} />
             <Route path="/hr" element={<Index />} />
             <Route path="/wellness" element={<Index />} />
             <Route path="/referrals" element={<Index />} />
