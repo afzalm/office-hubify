@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Clock, Receipt, Briefcase, Users } from 'lucide-react';
+import { Clock, FileInvoice, Briefcase, Users } from 'lucide-react';
 import { motion } from 'framer-motion';
 import QuickActions from '@/components/dashboard/QuickActions';
 import StatCard from '@/components/dashboard/StatCard';
@@ -18,7 +18,7 @@ const Dashboard = () => {
       color: 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'
     },
     { 
-      icon: Receipt, 
+      icon: FileInvoice, 
       title: 'Pending Invoices', 
       value: '$12,450', 
       change: { value: '10.5%', positive: true },

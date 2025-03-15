@@ -1,8 +1,9 @@
+
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
-  LayoutDashboard, Clock, Briefcase, Receipt, Users, 
+  LayoutDashboard, Clock, Briefcase, FileInvoice, Users, 
   Heart, UserPlus, CreditCard, BarChart, Settings, ChevronRight, Menu
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -20,7 +21,7 @@ const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
   { icon: Clock, label: 'Timesheet', path: '/timesheet' },
   { icon: Briefcase, label: 'Projects', path: '/projects' },
-  { icon: Receipt, label: 'Invoicing', path: '/invoicing' },
+  { icon: FileInvoice, label: 'Invoicing', path: '/invoicing' },
   { icon: Users, label: 'HR Portal', path: '/hr' },
   { icon: Heart, label: 'Wellness', path: '/wellness' },
   { icon: UserPlus, label: 'Referrals', path: '/referrals' },
@@ -33,6 +34,7 @@ const AppSidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
   const location = useLocation();
   const isMobile = useIsMobile();
   
+  // Close sidebar automatically on mobile when navigating
   const handleNavigation = () => {
     if (isMobile) {
       setCollapsed(true);
@@ -41,6 +43,7 @@ const AppSidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
 
   return (
     <>
+      {/* Mobile overlay */}
       {!collapsed && isMobile && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -51,6 +54,7 @@ const AppSidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
         />
       )}
       
+      {/* Sidebar */}
       <motion.aside
         initial={{ x: isMobile ? -280 : 0 }}
         animate={{ x: collapsed ? (isMobile ? -280 : -200) : 0 }}
@@ -134,6 +138,7 @@ const AppSidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
         </div>
       </motion.aside>
 
+      {/* Mobile toggle button */}
       {isMobile && collapsed && (
         <Button
           variant="outline"
