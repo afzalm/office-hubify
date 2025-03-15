@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Clock, CheckSquare, Briefcase, AlertCircle } from "lucide-react";
 import QuickActions from "@/components/dashboard/QuickActions";
 import StatCard from "@/components/dashboard/StatCard";
 import TimesheetSummary from "@/components/dashboard/TimesheetSummary";
@@ -19,32 +20,36 @@ const Dashboard = () => {
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard 
+          icon={Clock}
           title="Hours this week" 
           value="32.5" 
-          change="+2.5" 
-          trend="up" 
-          description="from last week" 
+          change={{ value: "+2.5", positive: true }}
+          color="bg-blue-100 text-blue-600"
+          index={0}
         />
         <StatCard 
+          icon={CheckSquare}
           title="Tasks completed" 
           value="24" 
-          change="+5" 
-          trend="up" 
-          description="from yesterday" 
+          change={{ value: "+5", positive: true }}
+          color="bg-green-100 text-green-600"
+          index={1}
         />
         <StatCard 
+          icon={Briefcase}
           title="Active projects" 
           value="7" 
-          change="+1" 
-          trend="up" 
-          description="from last month" 
+          change={{ value: "+1", positive: true }}
+          color="bg-purple-100 text-purple-600"
+          index={2}
         />
         <StatCard 
+          icon={AlertCircle}
           title="Pending approvals" 
           value="3" 
-          change="-2" 
-          trend="down" 
-          description="from yesterday" 
+          change={{ value: "-2", positive: false }}
+          color="bg-amber-100 text-amber-600"
+          index={3}
         />
       </div>
 
