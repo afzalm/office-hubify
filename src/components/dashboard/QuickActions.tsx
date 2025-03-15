@@ -2,9 +2,8 @@
 import React from 'react';
 import { 
   Clock, FileText, MessageSquare, Calendar, 
-  PlusCircle, User, CreditCard, FileInvoice 
+  PlusCircle, User, CreditCard, Receipt
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
@@ -16,7 +15,7 @@ const actions = [
   { icon: PlusCircle, label: 'New Project', color: 'bg-rose-50 text-rose-600 dark:bg-rose-900/20 dark:text-rose-400' },
   { icon: User, label: 'HR Request', color: 'bg-indigo-50 text-indigo-600 dark:bg-indigo-900/20 dark:text-indigo-400' },
   { icon: CreditCard, label: 'Benefits', color: 'bg-cyan-50 text-cyan-600 dark:bg-cyan-900/20 dark:text-cyan-400' },
-  { icon: FileInvoice, label: 'Invoices', color: 'bg-orange-50 text-orange-600 dark:bg-orange-900/20 dark:text-orange-400' },
+  { icon: Receipt, label: 'Invoices', color: 'bg-orange-50 text-orange-600 dark:bg-orange-900/20 dark:text-orange-400' },
 ];
 
 const QuickActions = () => {
@@ -27,21 +26,16 @@ const QuickActions = () => {
         <CardContent className="p-6">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {actions.map((action, index) => (
-              <motion.button
+              <button
                 key={action.label}
                 className={cn(
-                  "flex flex-col items-center justify-center p-4 rounded-xl hover-lift",
+                  "flex flex-col items-center justify-center p-4 rounded-xl hover:scale-105 transition",
                   action.color
                 )}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.05 }}
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.98 }}
               >
                 <action.icon className="h-6 w-6 mb-2" />
                 <span className="text-sm font-medium">{action.label}</span>
-              </motion.button>
+              </button>
             ))}
           </div>
         </CardContent>

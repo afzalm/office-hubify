@@ -1,9 +1,8 @@
 
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { 
-  LayoutDashboard, Clock, Briefcase, FileInvoice, Users, 
+  LayoutDashboard, Clock, Briefcase, Receipt, Users, 
   Heart, UserPlus, CreditCard, BarChart, Settings, ChevronRight, Menu
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -18,10 +17,10 @@ interface SidebarProps {
 }
 
 const menuItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
+  { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
   { icon: Clock, label: 'Timesheet', path: '/timesheet' },
   { icon: Briefcase, label: 'Projects', path: '/projects' },
-  { icon: FileInvoice, label: 'Invoicing', path: '/invoicing' },
+  { icon: Receipt, label: 'Invoicing', path: '/invoicing' },
   { icon: Users, label: 'HR Portal', path: '/hr' },
   { icon: Heart, label: 'Wellness', path: '/wellness' },
   { icon: UserPlus, label: 'Referrals', path: '/referrals' },
@@ -45,38 +44,29 @@ const AppSidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
     <>
       {/* Mobile overlay */}
       {!collapsed && isMobile && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+        <div
           className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
           onClick={() => setCollapsed(true)}
         />
       )}
       
       {/* Sidebar */}
-      <motion.aside
-        initial={{ x: isMobile ? -280 : 0 }}
-        animate={{ x: collapsed ? (isMobile ? -280 : -200) : 0 }}
-        transition={{ type: "spring", bounce: 0.1, duration: 0.5 }}
+      <aside
         className={cn(
           "fixed top-0 left-0 z-50 h-full w-[280px] bg-white dark:bg-gray-900 border-r shadow-sm",
-          "flex flex-col"
+          "flex flex-col transition-all duration-300",
+          collapsed && (isMobile ? "-translate-x-full" : "translate-x-[-200px]")
         )}
       >
         <div className="flex items-center justify-between p-4">
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="flex items-center gap-2"
-          >
+          <div className="flex items-center gap-2">
             <div className="rounded-md bg-primary p-1.5">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 2L4 6V18L12 22L20 18V6L12 2Z" fill="white" />
               </svg>
             </div>
             <span className="font-display text-lg font-semibold">Office Hub</span>
-          </motion.div>
+          </div>
           <Button 
             variant="ghost" 
             size="icon"
@@ -105,12 +95,8 @@ const AppSidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
                   )}
                 >
                   {isActive && (
-                    <motion.div
-                      layoutId="sidebar-active-indicator"
+                    <div
                       className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-r-full"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                     />
                   )}
                   <item.icon className={cn(
@@ -136,7 +122,7 @@ const AppSidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
             </div>
           </div>
         </div>
-      </motion.aside>
+      </aside>
 
       {/* Mobile toggle button */}
       {isMobile && collapsed && (
