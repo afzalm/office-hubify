@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -53,7 +54,7 @@ const AppSidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
       
       <aside
         className={cn(
-          "fixed top-0 left-0 z-50 h-full w-[280px] bg-white dark:bg-gray-900 border-r shadow-sm",
+          "fixed top-0 left-0 z-50 h-full w-[280px] glass-panel border-r",
           "flex flex-col transition-all duration-300",
           collapsed && (isMobile ? "-translate-x-full" : "translate-x-[-200px]")
         )}
@@ -77,7 +78,7 @@ const AppSidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
           </Button>
         </div>
         
-        <Separator />
+        <Separator className="bg-white/20 dark:bg-gray-800/20" />
         
         <div className="flex-1 overflow-y-auto py-3 px-3">
           <nav className="space-y-1">
@@ -90,8 +91,8 @@ const AppSidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
                   onClick={handleNavigation}
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all",
-                    "hover:bg-accent group relative",
-                    isActive ? "bg-accent text-primary font-medium" : "text-muted-foreground"
+                    "hover:bg-white/30 dark:hover:bg-gray-800/30 group relative",
+                    isActive ? "bg-white/40 dark:bg-gray-800/40 text-primary font-medium" : "text-foreground"
                   )}
                 >
                   {isActive && (
@@ -101,7 +102,7 @@ const AppSidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
                   )}
                   <item.icon className={cn(
                     "h-5 w-5 shrink-0",
-                    isActive ? "text-primary" : "text-muted-foreground"
+                    isActive ? "text-primary" : "text-foreground"
                   )} />
                   <span>{item.label}</span>
                 </Link>
@@ -110,7 +111,7 @@ const AppSidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
           </nav>
         </div>
         
-        <div className="mt-auto border-t p-3">
+        <div className="mt-auto border-t border-white/20 dark:border-gray-800/20 p-3">
           <div className="flex items-center gap-3 rounded-lg p-2">
             <Avatar className="h-9 w-9">
               <AvatarImage src="https://github.com/shadcn.png" alt="User" />
@@ -128,7 +129,7 @@ const AppSidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
         <Button
           variant="outline"
           size="icon"
-          className="fixed left-4 top-4 z-50 rounded-full shadow-md"
+          className="fixed left-4 top-4 z-50 rounded-full shadow-md glass-panel"
           onClick={() => setCollapsed(false)}
         >
           <Menu className="h-5 w-5" />

@@ -43,7 +43,7 @@ const AppLayout = () => {
           isMobile ? "ml-0" : (sidebarCollapsed ? "ml-[80px]" : "ml-[280px]")
         )}
       >
-        <header className="sticky top-0 z-30 h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <header className="sticky top-0 z-30 h-16 glass-panel">
           <div className="flex items-center justify-between px-4 h-full">
             <div className="flex items-center gap-3">
               <h1 className="text-xl font-display font-medium">{getPageTitle()}</h1>
@@ -57,7 +57,7 @@ const AppLayout = () => {
                 <Bell className="h-5 w-5" />
                 <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-primary"></span>
               </Button>
-              <Separator orientation="vertical" className="h-6" />
+              <Separator orientation="vertical" className="h-6 bg-white/20 dark:bg-gray-800/20" />
               <Button variant="ghost" size="icon" className="rounded-full">
                 <User className="h-5 w-5" />
               </Button>
@@ -75,7 +75,9 @@ const AppLayout = () => {
               transition={{ duration: 0.3 }}
               className="max-w-7xl mx-auto"
             >
-              <Outlet />
+              <div className="glass-card p-6">
+                <Outlet />
+              </div>
             </motion.div>
           </AnimatePresence>
         </main>

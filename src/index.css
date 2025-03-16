@@ -94,6 +94,10 @@
   
   body {
     @apply bg-background text-foreground font-sans antialiased;
+    background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
   }
   
   h1, h2, h3, h4, h5, h6 {
@@ -103,7 +107,7 @@
 
 @layer components {
   .glass-panel {
-    @apply bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border border-white/20 dark:border-gray-800/20 shadow-sm;
+    @apply bg-white/70 dark:bg-gray-900/70 backdrop-blur-md border border-white/30 dark:border-gray-800/30 shadow-sm;
   }
   
   .glass-card {
@@ -175,3 +179,4 @@ html {
 .animate-in {
   animation-delay: calc(var(--index) * 100ms);
 }
+
