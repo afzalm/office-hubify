@@ -14,6 +14,8 @@ import DocumentManager from "./pages/DocumentManager";
 import HandyTools from "./pages/HandyTools";
 import NotFound from "./pages/NotFound";
 import AppLayout from "./components/layout/AppLayout";
+import MailBox from "./pages/MailBox";
+import Directory from "./pages/Directory";
 
 const queryClient = new QueryClient();
 
@@ -36,10 +38,10 @@ const App = () => (
             <Route path="/document-manager" element={<DocumentManager />} />
             <Route path="/handy-tools" element={<HandyTools />} />
             <Route path="/hr" element={<Index />} />
-            <Route path="/wellness" element={<Index />} />
+            <Route path="/mailbox" element={<MailBox />} />
+            <Route path="/directory" element={<Directory />} />
             <Route path="/referrals" element={<Index />} />
             <Route path="/benefits" element={<Index />} />
-            <Route path="/invoicing" element={<Index />} />
             <Route path="/settings" element={<Index />} />
           </Route>
           

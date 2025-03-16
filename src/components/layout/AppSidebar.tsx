@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, Clock, Briefcase, Receipt, Users, 
   Heart, UserPlus, CreditCard, BarChart, Settings, ChevronLeft, ChevronRight, Menu,
-  Bot, FileText, Wrench
+  Bot, FileText, Wrench, Mail, UserRound
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -21,12 +21,12 @@ const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
   { icon: Clock, label: 'Timesheet', path: '/timesheet' },
   { icon: Briefcase, label: 'Projects', path: '/projects' },
-  { icon: Receipt, label: 'Invoicing', path: '/invoicing' },
+  { icon: UserRound, label: 'Directory', path: '/directory' },
   { icon: Bot, label: 'AI Assistant', path: '/ai-assistant' },
   { icon: FileText, label: 'DMS', path: '/document-manager' },
   { icon: Wrench, label: 'Handy Tools', path: '/handy-tools' },
   { icon: Users, label: 'HR Portal', path: '/hr' },
-  { icon: Heart, label: 'Wellness', path: '/wellness' },
+  { icon: Mail, label: 'Mail Box', path: '/mailbox' },
   { icon: UserPlus, label: 'Referrals', path: '/referrals' },
   { icon: CreditCard, label: 'Benefits', path: '/benefits' },
   { icon: BarChart, label: 'Analytics', path: '/analytics' },
