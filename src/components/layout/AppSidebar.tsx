@@ -1,10 +1,9 @@
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, Clock, Briefcase, Receipt, Users, 
   Heart, UserPlus, CreditCard, BarChart, Settings, ChevronRight, Menu,
-  Bot, FileText, Tool
+  Bot, FileText, Wrench
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -24,7 +23,7 @@ const menuItems = [
   { icon: Receipt, label: 'Invoicing', path: '/invoicing' },
   { icon: Bot, label: 'AI Assistant', path: '/ai-assistant' },
   { icon: FileText, label: 'DMS', path: '/document-manager' },
-  { icon: Tool, label: 'Handy Tools', path: '/handy-tools' },
+  { icon: Wrench, label: 'Handy Tools', path: '/handy-tools' },
   { icon: Users, label: 'HR Portal', path: '/hr' },
   { icon: Heart, label: 'Wellness', path: '/wellness' },
   { icon: UserPlus, label: 'Referrals', path: '/referrals' },
@@ -37,7 +36,6 @@ const AppSidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
   const location = useLocation();
   const isMobile = useIsMobile();
   
-  // Close sidebar automatically on mobile when navigating
   const handleNavigation = () => {
     if (isMobile) {
       setCollapsed(true);
@@ -46,7 +44,6 @@ const AppSidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
 
   return (
     <>
-      {/* Mobile overlay */}
       {!collapsed && isMobile && (
         <div
           className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
@@ -54,7 +51,6 @@ const AppSidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
         />
       )}
       
-      {/* Sidebar */}
       <aside
         className={cn(
           "fixed top-0 left-0 z-50 h-full w-[280px] bg-white dark:bg-gray-900 border-r shadow-sm",
@@ -128,7 +124,6 @@ const AppSidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
         </div>
       </aside>
 
-      {/* Mobile toggle button */}
       {isMobile && collapsed && (
         <Button
           variant="outline"
