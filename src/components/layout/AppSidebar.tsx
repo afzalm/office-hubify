@@ -3,8 +3,8 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, Clock, Briefcase, Receipt, Users, 
-  Heart, UserPlus, CreditCard, BarChart, Settings, ChevronLeft, ChevronRight, Menu,
-  Bot, FileText, Wrench, Mail, UserRound
+  LineChart, UserPlus, BarChart, Settings, ChevronLeft, ChevronRight, Menu,
+  Bot, FileText, Wrench, Mail, UserRound, ClipboardList
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -28,7 +28,8 @@ const menuItems = [
   { icon: Users, label: 'HR Portal', path: '/hr' },
   { icon: Mail, label: 'Mail Box', path: '/mailbox' },
   { icon: UserPlus, label: 'Referrals', path: '/referrals' },
-  { icon: CreditCard, label: 'Benefits', path: '/benefits' },
+  { icon: ClipboardList, label: 'Requisition', path: '/requisition' },
+  { icon: LineChart, label: 'MIS', path: '/mis' },
   { icon: BarChart, label: 'Analytics', path: '/analytics' },
   { icon: Settings, label: 'Settings', path: '/settings' },
 ];
