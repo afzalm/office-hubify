@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -32,6 +31,7 @@ import {
   Sparkles,
   Paperclip,
   Minimize,
+  MailPlus
 } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useToast } from '@/hooks/use-toast';
@@ -167,7 +167,6 @@ const MailBox = () => {
   };
 
   const handleStarEmail = (emailId: string) => {
-    // Implementation would update the starred status
     console.log("Star email:", emailId);
   };
 
@@ -186,159 +185,17 @@ const MailBox = () => {
   };
 
   return (
-    <div className="h-[calc(100vh-160px)]">
-      <div className="flex justify-between items-center mb-6">
+    <div className="h-full max-h-[calc(100vh-220px)] flex flex-col">
+      <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Mail Box</h1>
         <div className="flex items-center gap-2">
-          <Drawer open={isComposeOpen && !isComposeMinimized} onOpenChange={setIsComposeOpen}>
-            <DrawerTrigger asChild>
-              <Button onClick={() => {
-                setIsComposeOpen(true);
-                setIsComposeMinimized(false);
-              }}>
-                <Plus className="mr-2 h-4 w-4" />
-                Compose
-              </Button>
-            </DrawerTrigger>
-            <DrawerContent className="h-[85vh]">
-              <div className="p-4 max-w-4xl mx-auto w-full">
-                <div className="flex items-center justify-between mb-4">
-                  <DrawerHeader className="p-0">
-                    <DrawerTitle>New Message</DrawerTitle>
-                  </DrawerHeader>
-                  <div className="flex gap-2">
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      onClick={() => setIsComposeMinimized(true)}
-                    >
-                      <Minimize className="h-4 w-4" />
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      onClick={() => setIsComposeOpen(false)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-                
-                <div className="space-y-4">
-                  <div className="flex items-center border-b pb-2">
-                    <span className="w-20 text-sm text-muted-foreground">To:</span>
-                    <Input className="border-none shadow-none" placeholder="recipients" />
-                  </div>
-                  
-                  <div className="flex items-center border-b pb-2">
-                    <span className="w-20 text-sm text-muted-foreground">Subject:</span>
-                    <Input className="border-none shadow-none" placeholder="Subject" />
-                  </div>
-                  
-                  <div className="p-3 bg-white/20 rounded-md">
-                    <div className="flex items-center gap-1 mb-3 flex-wrap">
-                      <Button variant="ghost" size="sm">
-                        <Bold className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <Italic className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <Underline className="h-4 w-4" />
-                      </Button>
-                      <Separator orientation="vertical" className="h-6" />
-                      <Button variant="ghost" size="sm">
-                        <AlignLeft className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <AlignCenter className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <AlignRight className="h-4 w-4" />
-                      </Button>
-                      <Separator orientation="vertical" className="h-6" />
-                      <Button variant="ghost" size="sm">
-                        <List className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <ListOrdered className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <LinkIcon className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <Image className="h-4 w-4" />
-                      </Button>
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button variant="outline" size="sm" className="gap-1 ml-auto">
-                            <Sparkles className="h-4 w-4" />
-                            AI Assist
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                          <DialogHeader>
-                            <DialogTitle>AI Writing Assistant</DialogTitle>
-                          </DialogHeader>
-                          <div className="space-y-4">
-                            <p className="text-sm text-muted-foreground">
-                              What would you like the AI to help you with?
-                            </p>
-                            <Textarea 
-                              placeholder="e.g. Write a professional response to this client inquiry"
-                              className="min-h-[100px]"
-                            />
-                            <div className="flex justify-end gap-2">
-                              <Button variant="outline">Cancel</Button>
-                              <Button>Generate</Button>
-                            </div>
-                          </div>
-                        </DialogContent>
-                      </Dialog>
-                    </div>
-                    <Textarea className="min-h-[300px] border-none" placeholder="Compose your message..." />
-                  </div>
-                  
-                  <div className="flex justify-between">
-                    <Button variant="outline" size="sm">
-                      <Paperclip className="h-4 w-4 mr-1" />
-                      Attach
-                    </Button>
-                    <div className="flex gap-2">
-                      <Button variant="outline" onClick={() => setIsComposeOpen(false)}>
-                        Discard
-                      </Button>
-                      <Button onClick={handleSendEmail}>Send</Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </DrawerContent>
-          </Drawer>
-          
-          {isComposeMinimized && (
-            <div className="fixed bottom-0 right-6 z-50 w-80 glass-panel rounded-t-lg shadow-lg">
-              <div className="flex items-center justify-between p-3 cursor-pointer" 
-                onClick={() => setIsComposeMinimized(false)}>
-                <span className="font-medium">New Message</span>
-                <div className="flex gap-1">
-                  <Button variant="ghost" size="sm" className="h-6 w-6 p-0" onClick={(e) => {
-                    e.stopPropagation();
-                    setIsComposeMinimized(false);
-                    setIsComposeOpen(true);
-                  }}>
-                    <Minimize className="h-3 w-3 rotate-180" />
-                  </Button>
-                  <Button variant="ghost" size="sm" className="h-6 w-6 p-0" onClick={(e) => {
-                    e.stopPropagation();
-                    setIsComposeOpen(false);
-                  }}>
-                    <Trash2 className="h-3 w-3" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-          )}
+          <Button onClick={() => {
+            setIsComposeOpen(true);
+            setIsComposeMinimized(false);
+          }}>
+            <MailPlus className="mr-2 h-4 w-4" />
+            Compose
+          </Button>
           
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -347,9 +204,9 @@ const MailBox = () => {
         </div>
       </div>
       
-      <ResizablePanelGroup direction={isMobile ? "vertical" : "horizontal"} className="min-h-full glass-panel border rounded-lg">
+      <ResizablePanelGroup direction={isMobile ? "vertical" : "horizontal"} className="flex-1 min-h-0 glass-panel border rounded-lg">
         <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-          <div className="p-4 h-full flex flex-col">
+          <div className="p-4 h-full flex flex-col overflow-hidden">
             <Tabs defaultValue="all" className="w-full">
               <TabsList className="w-full">
                 <TabsTrigger value="all" className="flex-1">All</TabsTrigger>
@@ -358,7 +215,7 @@ const MailBox = () => {
               </TabsList>
             </Tabs>
             
-            <div className="mt-6 space-y-1 flex-1 overflow-y-auto">
+            <div className="mt-4 space-y-1 flex-1 overflow-y-auto">
               <Button 
                 variant={activeFolder === 'inbox' ? 'secondary' : 'ghost'} 
                 className="w-full justify-start"
@@ -399,7 +256,7 @@ const MailBox = () => {
               </Button>
             </div>
             
-            <div className="mt-6">
+            <div className="mt-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium">Labels</span>
                 <Button variant="ghost" size="sm">
@@ -432,173 +289,316 @@ const MailBox = () => {
         <ResizableHandle withHandle />
         
         <ResizablePanel defaultSize={80}>
-          {selectedEmail ? (
-            <div className="h-full flex flex-col">
-              <div className="p-4 border-b">
-                <div className="flex justify-between items-center mb-4">
-                  <Button variant="ghost" size="sm" onClick={() => setSelectedEmail(null)}>
-                    <ChevronDown className="mr-1 h-4 w-4 rotate-90" />
-                    Back
-                  </Button>
-                  
-                  <div className="flex gap-2">
-                    <Button variant="ghost" size="icon" onClick={() => handleStarEmail(selectedEmail.id)}>
-                      <Star className={`h-4 w-4 ${selectedEmail.starred ? 'fill-yellow-400 text-yellow-400' : ''}`} />
+          <div className="h-full flex flex-col overflow-hidden">
+            {selectedEmail ? (
+              <div className="h-full flex flex-col">
+                <div className="p-4 border-b">
+                  <div className="flex justify-between items-center mb-4">
+                    <Button variant="ghost" size="sm" onClick={() => setSelectedEmail(null)}>
+                      <ChevronDown className="mr-1 h-4 w-4 rotate-90" />
+                      Back
                     </Button>
-                    <Button variant="ghost" size="icon">
-                      <Archive className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="icon">
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-                
-                <h2 className="text-xl font-bold mb-4">{selectedEmail.subject}</h2>
-                
-                <div className="flex items-center gap-3">
-                  <Avatar>
-                    {selectedEmail.from.avatar ? (
-                      <AvatarImage src={selectedEmail.from.avatar} alt={selectedEmail.from.name} />
-                    ) : (
-                      <AvatarFallback>{selectedEmail.from.name.charAt(0)}</AvatarFallback>
-                    )}
-                  </Avatar>
-                  
-                  <div className="flex-1">
-                    <div className="flex justify-between">
-                      <div>
-                        <span className="font-medium">{selectedEmail.from.name}</span>
-                        <span className="text-sm text-muted-foreground ml-2">&lt;{selectedEmail.from.email}&gt;</span>
-                      </div>
-                      <span className="text-sm text-muted-foreground">
-                        {formatDate(selectedEmail.date)}
-                      </span>
-                    </div>
                     
-                    <div className="text-sm text-muted-foreground">
-                      to {selectedEmail.to.map(recipient => recipient.name).join(', ')}
+                    <div className="flex gap-2">
+                      <Button variant="ghost" size="icon" onClick={() => handleStarEmail(selectedEmail.id)}>
+                        <Star className={`h-4 w-4 ${selectedEmail.starred ? 'fill-yellow-400 text-yellow-400' : ''}`} />
+                      </Button>
+                      <Button variant="ghost" size="icon">
+                        <Archive className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon">
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <h2 className="text-xl font-bold mb-4">{selectedEmail.subject}</h2>
+                  
+                  <div className="flex items-center gap-3">
+                    <Avatar>
+                      {selectedEmail.from.avatar ? (
+                        <AvatarImage src={selectedEmail.from.avatar} alt={selectedEmail.from.name} />
+                      ) : (
+                        <AvatarFallback>{selectedEmail.from.name.charAt(0)}</AvatarFallback>
+                      )}
+                    </Avatar>
+                    
+                    <div className="flex-1">
+                      <div className="flex justify-between">
+                        <div>
+                          <span className="font-medium">{selectedEmail.from.name}</span>
+                          <span className="text-sm text-muted-foreground ml-2">&lt;{selectedEmail.from.email}&gt;</span>
+                        </div>
+                        <span className="text-sm text-muted-foreground">
+                          {formatDate(selectedEmail.date)}
+                        </span>
+                      </div>
+                      
+                      <div className="text-sm text-muted-foreground">
+                        to {selectedEmail.to.map(recipient => recipient.name).join(', ')}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              
-              <div className="p-6 flex-1 overflow-y-auto">
-                <div dangerouslySetInnerHTML={{ __html: selectedEmail.body }} />
                 
-                {selectedEmail.attachments.length > 0 && (
-                  <div className="mt-6 border-t pt-4">
-                    <h3 className="text-sm font-medium mb-3">Attachments ({selectedEmail.attachments.length})</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {selectedEmail.attachments.map((attachment, index) => (
-                        <div key={index} className="flex items-center p-3 border rounded-lg">
-                          <div className="bg-muted w-10 h-10 rounded flex items-center justify-center mr-3">
-                            <span className="uppercase text-xs font-bold">{attachment.type}</span>
+                <div className="p-6 flex-1 overflow-y-auto">
+                  <div dangerouslySetInnerHTML={{ __html: selectedEmail.body }} />
+                  
+                  {selectedEmail.attachments.length > 0 && (
+                    <div className="mt-6 border-t pt-4">
+                      <h3 className="text-sm font-medium mb-3">Attachments ({selectedEmail.attachments.length})</h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {selectedEmail.attachments.map((attachment, index) => (
+                          <div key={index} className="flex items-center p-3 border rounded-lg">
+                            <div className="bg-muted w-10 h-10 rounded flex items-center justify-center mr-3">
+                              <span className="uppercase text-xs font-bold">{attachment.type}</span>
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="truncate font-medium">{attachment.name}</p>
+                              <p className="text-xs text-muted-foreground">{attachment.size}</p>
+                            </div>
+                            <Button variant="ghost" size="sm">
+                              Download
+                            </Button>
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="truncate font-medium">{attachment.name}</p>
-                            <p className="text-xs text-muted-foreground">{attachment.size}</p>
-                          </div>
-                          <Button variant="ghost" size="sm">
-                            Download
-                          </Button>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
+                
+                <div className="p-4 border-t">
+                  <Button className="w-full" onClick={() => {
+                    setIsComposeOpen(true);
+                    setIsComposeMinimized(false);
+                  }}>
+                    Reply
+                  </Button>
+                </div>
               </div>
-              
-              <div className="p-4 border-t">
-                <Button className="w-full" onClick={() => {
-                  setIsComposeOpen(true);
-                  setIsComposeMinimized(false);
-                }}>
-                  Reply
+            ) : (
+              <div className="h-full flex flex-col">
+                <div className="p-4 border-b">
+                  <h2 className="font-medium">{activeFolder.charAt(0).toUpperCase() + activeFolder.slice(1)}</h2>
+                </div>
+                <div className="flex-1 overflow-y-auto">
+                  {mockEmails.map((email) => (
+                    <div 
+                      key={email.id}
+                      className={`p-4 border-b cursor-pointer hover:bg-white/20 transition-colors ${
+                        !email.read ? 'bg-white/10' : ''
+                      }`}
+                      onClick={() => setSelectedEmail(email)}
+                    >
+                      <div className="flex items-center gap-3">
+                        <Button 
+                          variant="ghost" 
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleStarEmail(email.id);
+                          }}
+                        >
+                          <Star className={`h-4 w-4 ${email.starred ? 'fill-yellow-400 text-yellow-400' : ''}`} />
+                        </Button>
+                        
+                        <Avatar className="h-9 w-9">
+                          {email.from.avatar ? (
+                            <AvatarImage src={email.from.avatar} alt={email.from.name} />
+                          ) : (
+                            <AvatarFallback>{email.from.name.charAt(0)}</AvatarFallback>
+                          )}
+                        </Avatar>
+                        
+                        <div className="flex-1 min-w-0">
+                          <div className="flex justify-between">
+                            <span className={`font-medium ${!email.read ? 'font-semibold' : ''}`}>
+                              {email.from.name}
+                            </span>
+                            <span className="text-sm text-muted-foreground">
+                              {formatDate(email.date)}
+                            </span>
+                          </div>
+                          
+                          <div className="text-sm font-medium overflow-hidden text-ellipsis whitespace-nowrap">
+                            {email.subject}
+                          </div>
+                          
+                          <div className="text-sm text-muted-foreground overflow-hidden text-ellipsis whitespace-nowrap">
+                            {email.body.replace(/<[^>]*>/g, '')}
+                          </div>
+                          
+                          {(email.labels.length > 0 || email.attachments.length > 0) && (
+                            <div className="flex gap-2 mt-1">
+                              {email.labels.map((label, index) => (
+                                <span 
+                                  key={index}
+                                  className="px-2 py-0.5 rounded-full text-xs bg-primary/20 text-primary"
+                                >
+                                  {label}
+                                </span>
+                              ))}
+                              
+                              {email.attachments.length > 0 && (
+                                <span className="flex items-center text-xs text-muted-foreground">
+                                  <Paperclip className="h-3 w-3 mr-1" />
+                                  {email.attachments.length}
+                                </span>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </ResizablePanel>
+      </ResizablePanelGroup>
+
+      <Drawer open={isComposeOpen && !isComposeMinimized} onOpenChange={setIsComposeOpen}>
+        <DrawerContent className="max-h-[85vh]">
+          <div className="p-4 max-w-4xl mx-auto w-full">
+            <div className="flex items-center justify-between mb-4">
+              <DrawerHeader className="p-0">
+                <DrawerTitle>New Message</DrawerTitle>
+              </DrawerHeader>
+              <div className="flex gap-2">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={() => setIsComposeMinimized(true)}
+                >
+                  <Minimize className="h-4 w-4" />
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={() => setIsComposeOpen(false)}
+                >
+                  <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
             </div>
-          ) : (
-            <div className="h-full flex flex-col">
-              <div className="p-4 border-b">
-                <h2 className="font-medium">{activeFolder.charAt(0).toUpperCase() + activeFolder.slice(1)}</h2>
+            
+            <div className="space-y-4">
+              <div className="flex items-center border-b pb-2">
+                <span className="w-20 text-sm text-muted-foreground">To:</span>
+                <Input className="border-none shadow-none" placeholder="recipients" />
               </div>
-              <div className="flex-1 overflow-y-auto">
-                {mockEmails.map((email) => (
-                  <div 
-                    key={email.id}
-                    className={`p-4 border-b cursor-pointer hover:bg-white/20 transition-colors ${
-                      !email.read ? 'bg-white/10' : ''
-                    }`}
-                    onClick={() => setSelectedEmail(email)}
-                  >
-                    <div className="flex items-center gap-3">
-                      <Button 
-                        variant="ghost" 
-                        size="icon"
-                        className="h-8 w-8"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleStarEmail(email.id);
-                        }}
-                      >
-                        <Star className={`h-4 w-4 ${email.starred ? 'fill-yellow-400 text-yellow-400' : ''}`} />
+              
+              <div className="flex items-center border-b pb-2">
+                <span className="w-20 text-sm text-muted-foreground">Subject:</span>
+                <Input className="border-none shadow-none" placeholder="Subject" />
+              </div>
+              
+              <div className="p-3 bg-white/20 rounded-md">
+                <div className="flex items-center gap-1 mb-3 flex-wrap">
+                  <Button variant="ghost" size="sm">
+                    <Bold className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="sm">
+                    <Italic className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="sm">
+                    <Underline className="h-4 w-4" />
+                  </Button>
+                  <Separator orientation="vertical" className="h-6" />
+                  <Button variant="ghost" size="sm">
+                    <AlignLeft className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="sm">
+                    <AlignCenter className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="sm">
+                    <AlignRight className="h-4 w-4" />
+                  </Button>
+                  <Separator orientation="vertical" className="h-6" />
+                  <Button variant="ghost" size="sm">
+                    <List className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="sm">
+                    <ListOrdered className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="sm">
+                    <LinkIcon className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="sm">
+                    <Image className="h-4 w-4" />
+                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" size="sm" className="gap-1 ml-auto">
+                        <Sparkles className="h-4 w-4" />
+                        AI Assist
                       </Button>
-                      
-                      <Avatar className="h-9 w-9">
-                        {email.from.avatar ? (
-                          <AvatarImage src={email.from.avatar} alt={email.from.name} />
-                        ) : (
-                          <AvatarFallback>{email.from.name.charAt(0)}</AvatarFallback>
-                        )}
-                      </Avatar>
-                      
-                      <div className="flex-1 min-w-0">
-                        <div className="flex justify-between">
-                          <span className={`font-medium ${!email.read ? 'font-semibold' : ''}`}>
-                            {email.from.name}
-                          </span>
-                          <span className="text-sm text-muted-foreground">
-                            {formatDate(email.date)}
-                          </span>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>AI Writing Assistant</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <p className="text-sm text-muted-foreground">
+                          What would you like the AI to help you with?
+                        </p>
+                        <Textarea 
+                          placeholder="e.g. Write a professional response to this client inquiry"
+                          className="min-h-[100px]"
+                        />
+                        <div className="flex justify-end gap-2">
+                          <Button variant="outline">Cancel</Button>
+                          <Button>Generate</Button>
                         </div>
-                        
-                        <div className="text-sm font-medium overflow-hidden text-ellipsis whitespace-nowrap">
-                          {email.subject}
-                        </div>
-                        
-                        <div className="text-sm text-muted-foreground overflow-hidden text-ellipsis whitespace-nowrap">
-                          {email.body.replace(/<[^>]*>/g, '')}
-                        </div>
-                        
-                        {(email.labels.length > 0 || email.attachments.length > 0) && (
-                          <div className="flex gap-2 mt-1">
-                            {email.labels.map((label, index) => (
-                              <span 
-                                key={index}
-                                className="px-2 py-0.5 rounded-full text-xs bg-primary/20 text-primary"
-                              >
-                                {label}
-                              </span>
-                            ))}
-                            
-                            {email.attachments.length > 0 && (
-                              <span className="flex items-center text-xs text-muted-foreground">
-                                <Paperclip className="h-3 w-3 mr-1" />
-                                {email.attachments.length}
-                              </span>
-                            )}
-                          </div>
-                        )}
                       </div>
-                    </div>
-                  </div>
-                ))}
+                    </DialogContent>
+                  </Dialog>
+                </div>
+                <Textarea className="min-h-[300px] border-none" placeholder="Compose your message..." />
+              </div>
+              
+              <div className="flex justify-between">
+                <Button variant="outline" size="sm">
+                  <Paperclip className="h-4 w-4 mr-1" />
+                  Attach
+                </Button>
+                <div className="flex gap-2">
+                  <Button variant="outline" onClick={() => setIsComposeOpen(false)}>
+                    Discard
+                  </Button>
+                  <Button onClick={handleSendEmail}>Send</Button>
+                </div>
               </div>
             </div>
-          )}
-        </ResizablePanel>
-      </ResizablePanelGroup>
+          </div>
+        </DrawerContent>
+      </Drawer>
+      
+      {isComposeMinimized && (
+        <div className="fixed bottom-0 right-6 z-50 w-80 glass-panel rounded-t-lg shadow-lg">
+          <div className="flex items-center justify-between p-3 cursor-pointer" 
+            onClick={() => setIsComposeMinimized(false)}>
+            <span className="font-medium">New Message</span>
+            <div className="flex gap-1">
+              <Button variant="ghost" size="sm" className="h-6 w-6 p-0" onClick={(e) => {
+                e.stopPropagation();
+                setIsComposeMinimized(false);
+                setIsComposeOpen(true);
+              }}>
+                <Minimize className="h-3 w-3 rotate-180" />
+              </Button>
+              <Button variant="ghost" size="sm" className="h-6 w-6 p-0" onClick={(e) => {
+                e.stopPropagation();
+                setIsComposeOpen(false);
+              }}>
+                <Trash2 className="h-3 w-3" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
