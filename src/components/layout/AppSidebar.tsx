@@ -3,7 +3,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, Clock, Briefcase, Receipt, Users, 
-  Heart, UserPlus, CreditCard, BarChart, Settings, ChevronRight, Menu,
+  Heart, UserPlus, CreditCard, BarChart, Settings, ChevronLeft, ChevronRight, Menu,
   Bot, FileText, Wrench
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -43,6 +43,10 @@ const AppSidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
     }
   };
 
+  const toggleSidebar = () => {
+    setCollapsed(!collapsed);
+  };
+
   return (
     <>
       {!collapsed && isMobile && (
@@ -54,27 +58,29 @@ const AppSidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
       
       <aside
         className={cn(
-          "fixed top-0 left-0 z-50 h-full w-[280px] glass-panel border-r",
+          "fixed top-0 left-0 z-50 h-full glass-panel border-r",
           "flex flex-col transition-all duration-300",
-          collapsed && (isMobile ? "-translate-x-full" : "translate-x-[-200px]")
+          collapsed ? "w-[80px]" : "w-[280px]"
         )}
       >
         <div className="flex items-center justify-between p-4">
-          <div className="flex items-center gap-2">
-            <div className="rounded-md bg-primary p-1.5">
+          <div className="flex items-center gap-2 overflow-hidden">
+            <div className="rounded-md bg-primary p-1.5 shrink-0">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 2L4 6V18L12 22L20 18V6L12 2Z" fill="white" />
               </svg>
             </div>
-            <span className="font-display text-lg font-semibold">Office Hub</span>
+            {!collapsed && (
+              <span className="font-display text-lg font-semibold whitespace-nowrap">Office Hub</span>
+            )}
           </div>
           <Button 
             variant="ghost" 
             size="icon"
-            onClick={() => setCollapsed(!collapsed)}
-            className="h-8 w-8"
+            onClick={toggleSidebar}
+            className="h-8 w-8 shrink-0"
           >
-            <ChevronRight className="h-4 w-4" />
+            {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
           </Button>
         </div>
         
@@ -92,7 +98,8 @@ const AppSidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all",
                     "hover:bg-white/30 dark:hover:bg-gray-800/30 group relative",
-                    isActive ? "bg-white/40 dark:bg-gray-800/40 text-primary font-medium" : "text-foreground"
+                    isActive ? "bg-white/40 dark:bg-gray-800/40 text-primary font-medium" : "text-foreground",
+                    collapsed && "justify-center px-2"
                   )}
                 >
                   {isActive && (
@@ -104,25 +111,35 @@ const AppSidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
                     "h-5 w-5 shrink-0",
                     isActive ? "text-primary" : "text-foreground"
                   )} />
-                  <span>{item.label}</span>
+                  {!collapsed && <span>{item.label}</span>}
                 </Link>
               );
             })}
           </nav>
         </div>
         
-        <div className="mt-auto border-t border-white/20 dark:border-gray-800/20 p-3">
-          <div className="flex items-center gap-3 rounded-lg p-2">
+        {!collapsed && (
+          <div className="mt-auto border-t border-white/20 dark:border-gray-800/20 p-3">
+            <div className="flex items-center gap-3 rounded-lg p-2">
+              <Avatar className="h-9 w-9">
+                <AvatarImage src="https://github.com/shadcn.png" alt="User" />
+                <AvatarFallback>JD</AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col">
+                <span className="text-sm font-medium">John Doe</span>
+                <span className="text-xs text-muted-foreground">Product Manager</span>
+              </div>
+            </div>
+          </div>
+        )}
+        {collapsed && (
+          <div className="mt-auto border-t border-white/20 dark:border-gray-800/20 p-3 flex justify-center">
             <Avatar className="h-9 w-9">
               <AvatarImage src="https://github.com/shadcn.png" alt="User" />
               <AvatarFallback>JD</AvatarFallback>
             </Avatar>
-            <div className="flex flex-col">
-              <span className="text-sm font-medium">John Doe</span>
-              <span className="text-xs text-muted-foreground">Product Manager</span>
-            </div>
           </div>
-        </div>
+        )}
       </aside>
 
       {isMobile && collapsed && (
