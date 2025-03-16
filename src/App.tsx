@@ -16,6 +16,8 @@ import NotFound from "./pages/NotFound";
 import AppLayout from "./components/layout/AppLayout";
 import MailBox from "./pages/MailBox";
 import Directory from "./pages/Directory";
+import MIS from "./pages/MIS";
+import Requisition from "./pages/Requisition";
 
 const queryClient = new QueryClient();
 
@@ -41,7 +43,8 @@ const App = () => (
             <Route path="/mailbox" element={<MailBox />} />
             <Route path="/directory" element={<Directory />} />
             <Route path="/referrals" element={<Index />} />
-            <Route path="/benefits" element={<Index />} />
+            <Route path="/mis" element={<MIS />} />
+            <Route path="/requisition" element={<Requisition />} />
             <Route path="/settings" element={<Index />} />
           </Route>
           
