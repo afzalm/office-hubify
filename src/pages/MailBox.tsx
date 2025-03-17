@@ -1,477 +1,604 @@
 
 import React, { useState } from 'react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { 
-  Search, Star, Inbox, Send, Archive, Trash2, AlertCircle, 
-  MailPlus, RefreshCcw, MoreVertical, ChevronDown, Tag, User, 
-  Clock, Paperclip, Bold, Italic, Underline, List, ListOrdered, 
-  Trash, Link, Image, AlignLeft, AlignCenter, AlignRight, Sparkles,
-  FileText, Download
+  ChevronDown, 
+  Mail, 
+  Inbox, 
+  Send, 
+  Archive, 
+  Trash2, 
+  Star, 
+  Search, 
+  Plus, 
+  Image, 
+  Bold, 
+  Italic, 
+  Underline, 
+  List, 
+  ListOrdered, 
+  AlignLeft, 
+  AlignCenter, 
+  AlignRight, 
+  Link as LinkIcon, 
+  Sparkles,
+  Paperclip,
+  Minimize,
 } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { useToast } from '@/hooks/use-toast';
+
+type Email = {
+  id: string;
+  from: {
+    name: string;
+    email: string;
+    avatar?: string;
+  };
+  to: {
+    name: string;
+    email: string;
+  }[];
+  subject: string;
+  body: string;
+  date: Date;
+  read: boolean;
+  starred: boolean;
+  labels: string[];
+  attachments: {
+    name: string;
+    size: string;
+    type: string;
+  }[];
+};
+
+const mockEmails: Email[] = [
+  {
+    id: '1',
+    from: {
+      name: 'Alex Johnson',
+      email: 'alex.johnson@example.com',
+      avatar: 'https://i.pravatar.cc/150?img=1',
+    },
+    to: [{ name: 'John Doe', email: 'john.doe@company.com' }],
+    subject: 'Project Update - Q3 Roadmap',
+    body: '<p>Hi John,</p><p>I wanted to share the latest updates on our Q3 roadmap. We\'ve made significant progress on the key initiatives we discussed last month.</p><p>Can we schedule a quick call tomorrow to go over the details?</p><p>Best regards,<br>Alex</p>',
+    date: new Date('2023-09-01T10:30:00'),
+    read: false,
+    starred: true,
+    labels: ['Work', 'Important'],
+    attachments: [
+      { name: 'Q3_Roadmap.pdf', size: '2.4 MB', type: 'pdf' },
+      { name: 'Project_Timeline.xlsx', size: '1.8 MB', type: 'xlsx' },
+    ],
+  },
+  {
+    id: '2',
+    from: {
+      name: 'Sarah Williams',
+      email: 'sarah.williams@example.com',
+      avatar: 'https://i.pravatar.cc/150?img=5',
+    },
+    to: [{ name: 'John Doe', email: 'john.doe@company.com' }],
+    subject: 'Team Lunch Next Week',
+    body: '<p>Hey everyone,</p><p>I\'d like to organize a team lunch next week to celebrate our recent launch. Please let me know which day works best for you.</p><p>Thanks!<br>Sarah</p>',
+    date: new Date('2023-08-30T14:15:00'),
+    read: true,
+    starred: false,
+    labels: ['Social'],
+    attachments: [],
+  },
+  {
+    id: '3',
+    from: {
+      name: 'Michael Chen',
+      email: 'michael.chen@example.com',
+      avatar: 'https://i.pravatar.cc/150?img=8',
+    },
+    to: [{ name: 'John Doe', email: 'john.doe@company.com' }],
+    subject: 'Client Presentation Feedback',
+    body: '<p>Hi John,</p><p>The client was very impressed with our presentation yesterday. They\'ve requested a few minor changes to the proposal, which I\'ve outlined in the attached document.</p><p>Let\'s discuss these changes in our next meeting.</p><p>Regards,<br>Michael</p>',
+    date: new Date('2023-08-29T09:45:00'),
+    read: true,
+    starred: true,
+    labels: ['Client', 'Work'],
+    attachments: [
+      { name: 'Client_Feedback.docx', size: '1.2 MB', type: 'docx' },
+    ],
+  },
+  {
+    id: '4',
+    from: {
+      name: 'Emily Davis',
+      email: 'emily.davis@example.com',
+      avatar: 'https://i.pravatar.cc/150?img=9',
+    },
+    to: [{ name: 'John Doe', email: 'john.doe@company.com' }],
+    subject: 'Vacation Photos',
+    body: '<p>Hi everyone,</p><p>I\'ve uploaded the vacation photos to our shared drive. Feel free to check them out and download any you\'d like to keep.</p><p>Had a great time with you all!</p><p>Cheers,<br>Emily</p>',
+    date: new Date('2023-08-28T16:30:00'),
+    read: false,
+    starred: false,
+    labels: ['Personal'],
+    attachments: [],
+  },
+  {
+    id: '5',
+    from: {
+      name: 'David Kim',
+      email: 'david.kim@example.com',
+      avatar: 'https://i.pravatar.cc/150?img=12',
+    },
+    to: [{ name: 'John Doe', email: 'john.doe@company.com' }],
+    subject: 'Budget Approval Needed',
+    body: '<p>John,</p><p>I need your approval for the updated marketing budget for Q4. We\'ve made some adjustments based on the performance of our recent campaigns.</p><p>Please review and approve at your earliest convenience.</p><p>Thanks,<br>David</p>',
+    date: new Date('2023-08-27T11:20:00'),
+    read: true,
+    starred: true,
+    labels: ['Work', 'Urgent'],
+    attachments: [
+      { name: 'Q4_Marketing_Budget.pdf', size: '3.1 MB', type: 'pdf' },
+    ],
+  }
+];
 
 const MailBox = () => {
-  const [selectedEmail, setSelectedEmail] = useState(null);
-  const [composeOpen, setComposeOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("inbox");
-  const [showSidebar, setShowSidebar] = useState(true);
+  const [selectedEmail, setSelectedEmail] = useState<Email | null>(null);
+  const [isComposeOpen, setIsComposeOpen] = useState(false);
+  const [isComposeMinimized, setIsComposeMinimized] = useState(false);
+  const [activeFolder, setActiveFolder] = useState('inbox');
+  const { toast } = useToast();
   const isMobile = useIsMobile();
-  
-  const emails = [
-    {
-      id: 1,
-      from: 'Alex Johnson',
-      subject: 'Project Update: Q3 Goals',
-      preview: 'I wanted to provide an update on our progress towards the Q3 goals we discussed last week...',
-      time: '10:23 AM',
-      unread: true,
-      starred: false,
-      avatar: 'A',
-      hasAttachment: true,
-    },
-    {
-      id: 2,
-      from: 'Sarah Miller',
-      subject: 'Re: Meeting Notes - Product Team',
-      preview: 'Here are the meeting notes from yesterday\'s session. Let me know if you have any questions...',
-      time: 'Yesterday',
-      unread: false,
-      starred: true,
-      avatar: 'S',
-      hasAttachment: false,
-    },
-    {
-      id: 3,
-      from: 'David Wilson',
-      subject: 'Client Presentation Draft',
-      preview: 'I\'ve attached the draft for the upcoming client presentation. Please review when you get a chance...',
-      time: 'Jul 10',
-      unread: false,
-      starred: false,
-      avatar: 'D',
-      hasAttachment: true,
-    },
-    {
-      id: 4,
-      from: 'Emily Chen',
-      subject: 'Quick Question About Budget',
-      preview: 'I was looking at the budget for the marketing campaign and noticed there might be a discrepancy...',
-      time: 'Jul 9',
-      unread: true,
-      starred: false,
-      avatar: 'E',
-      hasAttachment: false,
-    },
-    {
-      id: 5,
-      from: 'Michael Brown',
-      subject: 'Team Lunch Next Week',
-      preview: 'I\'m organizing a team lunch for next Wednesday at 12:30 PM. Please let me know if you can join...',
-      time: 'Jul 8',
-      unread: false,
-      starred: false,
-      avatar: 'M',
-      hasAttachment: false,
-    },
-    {
-      id: 6,
-      from: 'Olivia Martinez',
-      subject: 'Updated Design Assets',
-      preview: 'I\'ve uploaded the updated design assets to the shared folder. The new color palette is now available...',
-      time: 'Jul 7',
-      unread: false,
-      starred: true,
-      avatar: 'O',
-      hasAttachment: true,
-    },
-  ];
-  
-  const toggleSidebar = () => {
-    setShowSidebar(!showSidebar);
+
+  const handleSendEmail = () => {
+    toast({
+      title: "Email Sent",
+      description: "Your email has been sent successfully.",
+    });
+    setIsComposeOpen(false);
   };
-  
-  const handleEmailSelect = (email) => {
-    setSelectedEmail(email);
+
+  const handleStarEmail = (emailId: string) => {
+    // Implementation would update the starred status
+    console.log("Star email:", emailId);
   };
-  
+
+  const formatDate = (date: Date) => {
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    if (date.toDateString() === today.toDateString()) {
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } else if (date.toDateString() === yesterday.toDateString()) {
+      return 'Yesterday';
+    } else {
+      return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+    }
+  };
+
   return (
-    <div className="h-full flex flex-col overflow-hidden">
-      <div className="flex items-center justify-between p-2 border-b">
+    <div className="h-[calc(100vh-160px)]">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Mail Box</h1>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="icon" onClick={toggleSidebar} className="lg:hidden">
-            <AlignLeft className="h-4 w-4" />
-          </Button>
-          <div className="relative w-full max-w-md">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="Search mail..." className="pl-8 w-full" />
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="icon">
-            <RefreshCcw className="h-4 w-4" />
-          </Button>
-          <Drawer open={composeOpen} onOpenChange={setComposeOpen}>
-            <DrawerContent className="h-[80vh] sm:h-[70vh]">
-              <DrawerHeader className="border-b px-4 py-3">
-                <DrawerTitle>New Message</DrawerTitle>
-              </DrawerHeader>
-              <div className="flex flex-col">
-                <div className="p-4 border-b">
-                  <Input placeholder="To" className="border-0 focus-visible:ring-0 px-0 py-1.5" />
-                </div>
-                <div className="p-4 border-b">
-                  <Input placeholder="Subject" className="border-0 focus-visible:ring-0 px-0 py-1.5" />
-                </div>
-                <div className="p-4 flex-1 overflow-auto min-h-[200px]">
-                  <textarea 
-                    className="w-full h-full outline-none resize-none" 
-                    placeholder="Compose email..."
-                  />
-                </div>
-                <div className="p-3 border-t flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <Button variant="outline" size="icon" className="h-8 w-8">
-                      <Bold className="h-4 w-4" />
+          <Drawer open={isComposeOpen && !isComposeMinimized} onOpenChange={setIsComposeOpen}>
+            <DrawerTrigger asChild>
+              <Button onClick={() => {
+                setIsComposeOpen(true);
+                setIsComposeMinimized(false);
+              }}>
+                <Plus className="mr-2 h-4 w-4" />
+                Compose
+              </Button>
+            </DrawerTrigger>
+            <DrawerContent className="h-[85vh]">
+              <div className="p-4 max-w-4xl mx-auto w-full">
+                <div className="flex items-center justify-between mb-4">
+                  <DrawerHeader className="p-0">
+                    <DrawerTitle>New Message</DrawerTitle>
+                  </DrawerHeader>
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      onClick={() => setIsComposeMinimized(true)}
+                    >
+                      <Minimize className="h-4 w-4" />
                     </Button>
-                    <Button variant="outline" size="icon" className="h-8 w-8">
-                      <Italic className="h-4 w-4" />
-                    </Button>
-                    <Button variant="outline" size="icon" className="h-8 w-8">
-                      <Underline className="h-4 w-4" />
-                    </Button>
-                    <Button variant="outline" size="icon" className="h-8 w-8">
-                      <List className="h-4 w-4" />
-                    </Button>
-                    <Button variant="outline" size="icon" className="h-8 w-8">
-                      <ListOrdered className="h-4 w-4" />
-                    </Button>
-                    <Button variant="outline" size="icon" className="h-8 w-8 hidden sm:flex">
-                      <Link className="h-4 w-4" />
-                    </Button>
-                    <Button variant="outline" size="icon" className="h-8 w-8 hidden sm:flex">
-                      <Image className="h-4 w-4" />
-                    </Button>
-                    <Button variant="outline" size="icon" className="h-8 w-8 hidden md:flex">
-                      <AlignLeft className="h-4 w-4" />
-                    </Button>
-                    <Button variant="outline" size="icon" className="h-8 w-8 hidden md:flex">
-                      <AlignCenter className="h-4 w-4" />
-                    </Button>
-                    <Button variant="outline" size="icon" className="h-8 w-8 hidden md:flex">
-                      <AlignRight className="h-4 w-4" />
-                    </Button>
-                    <Button variant="outline" size="icon" className="h-8 w-8">
-                      <Sparkles className="h-4 w-4" />
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      onClick={() => setIsComposeOpen(false)}
+                    >
+                      <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm" onClick={() => setComposeOpen(false)}>
-                      <Trash className="h-4 w-4 mr-2" />
-                      <span className="hidden sm:inline">Discard</span>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="flex items-center border-b pb-2">
+                    <span className="w-20 text-sm text-muted-foreground">To:</span>
+                    <Input className="border-none shadow-none" placeholder="recipients" />
+                  </div>
+                  
+                  <div className="flex items-center border-b pb-2">
+                    <span className="w-20 text-sm text-muted-foreground">Subject:</span>
+                    <Input className="border-none shadow-none" placeholder="Subject" />
+                  </div>
+                  
+                  <div className="p-3 bg-white/20 rounded-md">
+                    <div className="flex items-center gap-1 mb-3 flex-wrap">
+                      <Button variant="ghost" size="sm">
+                        <Bold className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Italic className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Underline className="h-4 w-4" />
+                      </Button>
+                      <Separator orientation="vertical" className="h-6" />
+                      <Button variant="ghost" size="sm">
+                        <AlignLeft className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <AlignCenter className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <AlignRight className="h-4 w-4" />
+                      </Button>
+                      <Separator orientation="vertical" className="h-6" />
+                      <Button variant="ghost" size="sm">
+                        <List className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <ListOrdered className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <LinkIcon className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Image className="h-4 w-4" />
+                      </Button>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" size="sm" className="gap-1 ml-auto">
+                            <Sparkles className="h-4 w-4" />
+                            AI Assist
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>AI Writing Assistant</DialogTitle>
+                          </DialogHeader>
+                          <div className="space-y-4">
+                            <p className="text-sm text-muted-foreground">
+                              What would you like the AI to help you with?
+                            </p>
+                            <Textarea 
+                              placeholder="e.g. Write a professional response to this client inquiry"
+                              className="min-h-[100px]"
+                            />
+                            <div className="flex justify-end gap-2">
+                              <Button variant="outline">Cancel</Button>
+                              <Button>Generate</Button>
+                            </div>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+                    <Textarea className="min-h-[300px] border-none" placeholder="Compose your message..." />
+                  </div>
+                  
+                  <div className="flex justify-between">
+                    <Button variant="outline" size="sm">
+                      <Paperclip className="h-4 w-4 mr-1" />
+                      Attach
                     </Button>
-                    <Button size="sm">
-                      <Send className="h-4 w-4 mr-2" />
-                      <span className="hidden sm:inline">Send</span>
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button variant="outline" onClick={() => setIsComposeOpen(false)}>
+                        Discard
+                      </Button>
+                      <Button onClick={handleSendEmail}>Send</Button>
+                    </div>
                   </div>
                 </div>
               </div>
             </DrawerContent>
           </Drawer>
           
-          <Button variant="outline" size="icon" className="sm:hidden" onClick={() => setComposeOpen(true)}>
-            <MailPlus className="h-4 w-4" />
-          </Button>
+          {isComposeMinimized && (
+            <div className="fixed bottom-0 right-6 z-50 w-80 glass-panel rounded-t-lg shadow-lg">
+              <div className="flex items-center justify-between p-3 cursor-pointer" 
+                onClick={() => setIsComposeMinimized(false)}>
+                <span className="font-medium">New Message</span>
+                <div className="flex gap-1">
+                  <Button variant="ghost" size="sm" className="h-6 w-6 p-0" onClick={(e) => {
+                    e.stopPropagation();
+                    setIsComposeMinimized(false);
+                    setIsComposeOpen(true);
+                  }}>
+                    <Minimize className="h-3 w-3 rotate-180" />
+                  </Button>
+                  <Button variant="ghost" size="sm" className="h-6 w-6 p-0" onClick={(e) => {
+                    e.stopPropagation();
+                    setIsComposeOpen(false);
+                  }}>
+                    <Trash2 className="h-3 w-3" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input className="pl-9 w-[250px]" placeholder="Search emails..." />
+          </div>
         </div>
       </div>
       
-      <div className="flex-1 flex overflow-hidden">
-        <div className={`border-r overflow-hidden ${showSidebar ? 'w-60 sm:block' : 'hidden'} ${showSidebar ? 'block' : 'hidden'}`}>
-          <Tabs defaultValue="inbox" value={activeTab} onValueChange={setActiveTab} orientation="vertical" className="h-full flex flex-col">
-            <div className="p-2">
-              <Button className="w-full justify-start" onClick={() => setComposeOpen(true)}>
-                <MailPlus className="mr-2 h-4 w-4" />
-                Compose
-              </Button>
-            </div>
-            <TabsList className="flex flex-col h-auto justify-start w-full p-1 bg-transparent">
-              <TabsTrigger 
-                value="inbox" 
-                className="justify-start px-3 py-2 w-full"
+      <ResizablePanelGroup direction={isMobile ? "vertical" : "horizontal"} className="min-h-full glass-panel border rounded-lg">
+        <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
+          <div className="p-4 h-full flex flex-col">
+            <Tabs defaultValue="all" className="w-full">
+              <TabsList className="w-full">
+                <TabsTrigger value="all" className="flex-1">All</TabsTrigger>
+                <TabsTrigger value="unread" className="flex-1">Unread</TabsTrigger>
+                <TabsTrigger value="flagged" className="flex-1">Flagged</TabsTrigger>
+              </TabsList>
+            </Tabs>
+            
+            <div className="mt-6 space-y-1 flex-1 overflow-y-auto">
+              <Button 
+                variant={activeFolder === 'inbox' ? 'secondary' : 'ghost'} 
+                className="w-full justify-start"
+                onClick={() => setActiveFolder('inbox')}
               >
                 <Inbox className="mr-2 h-4 w-4" />
-                Inbox
-                <Badge className="ml-auto" variant="secondary">4</Badge>
-              </TabsTrigger>
-              <TabsTrigger 
-                value="starred" 
-                className="justify-start px-3 py-2 w-full"
-              >
-                <Star className="mr-2 h-4 w-4" />
-                Starred
-              </TabsTrigger>
-              <TabsTrigger 
-                value="sent" 
-                className="justify-start px-3 py-2 w-full"
+                <span>Inbox</span>
+                <span className="ml-auto bg-primary text-primary-foreground text-xs rounded-full px-2">
+                  3
+                </span>
+              </Button>
+              
+              <Button 
+                variant={activeFolder === 'sent' ? 'secondary' : 'ghost'} 
+                className="w-full justify-start"
+                onClick={() => setActiveFolder('sent')}
               >
                 <Send className="mr-2 h-4 w-4" />
-                Sent
-              </TabsTrigger>
-              <TabsTrigger 
-                value="drafts" 
-                className="justify-start px-3 py-2 w-full"
-              >
-                <AlertCircle className="mr-2 h-4 w-4" />
-                Drafts
-                <Badge className="ml-auto" variant="secondary">2</Badge>
-              </TabsTrigger>
-              <TabsTrigger 
-                value="archive" 
-                className="justify-start px-3 py-2 w-full"
+                <span>Sent</span>
+              </Button>
+              
+              <Button 
+                variant={activeFolder === 'archive' ? 'secondary' : 'ghost'} 
+                className="w-full justify-start"
+                onClick={() => setActiveFolder('archive')}
               >
                 <Archive className="mr-2 h-4 w-4" />
-                Archive
-              </TabsTrigger>
-              <TabsTrigger 
-                value="trash" 
-                className="justify-start px-3 py-2 w-full"
+                <span>Archive</span>
+              </Button>
+              
+              <Button 
+                variant={activeFolder === 'trash' ? 'secondary' : 'ghost'} 
+                className="w-full justify-start"
+                onClick={() => setActiveFolder('trash')}
               >
                 <Trash2 className="mr-2 h-4 w-4" />
-                Trash
-              </TabsTrigger>
-            </TabsList>
+                <span>Trash</span>
+              </Button>
+            </div>
             
-            <Separator className="my-2" />
-            
-            <div className="px-3 py-2">
-              <h3 className="text-sm font-medium flex items-center justify-between">
-                Labels
-                <Button variant="ghost" size="icon" className="h-5 w-5">
-                  <ChevronDown className="h-4 w-4" />
+            <div className="mt-6">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium">Labels</span>
+                <Button variant="ghost" size="sm">
+                  <Plus className="h-3 w-3" />
                 </Button>
-              </h3>
-              <div className="mt-2 space-y-1">
-                <Button variant="ghost" className="w-full justify-start text-xs h-7">
-                  <span className="h-2 w-2 rounded-full bg-red-500 mr-2" />
-                  Important
-                </Button>
-                <Button variant="ghost" className="w-full justify-start text-xs h-7">
-                  <span className="h-2 w-2 rounded-full bg-yellow-500 mr-2" />
-                  Personal
-                </Button>
-                <Button variant="ghost" className="w-full justify-start text-xs h-7">
-                  <span className="h-2 w-2 rounded-full bg-green-500 mr-2" />
-                  Work
-                </Button>
-                <Button variant="ghost" className="w-full justify-start text-xs h-7">
-                  <span className="h-2 w-2 rounded-full bg-blue-500 mr-2" />
-                  Project X
+              </div>
+              
+              <div className="space-y-1">
+                <div className="flex items-center">
+                  <div className="w-3 h-3 rounded-full bg-blue-500 mr-2" />
+                  <span className="text-sm">Work</span>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-3 h-3 rounded-full bg-green-500 mr-2" />
+                  <span className="text-sm">Personal</span>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-3 h-3 rounded-full bg-yellow-500 mr-2" />
+                  <span className="text-sm">Important</span>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-3 h-3 rounded-full bg-purple-500 mr-2" />
+                  <span className="text-sm">Client</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ResizablePanel>
+        
+        <ResizableHandle withHandle />
+        
+        <ResizablePanel defaultSize={80}>
+          {selectedEmail ? (
+            <div className="h-full flex flex-col">
+              <div className="p-4 border-b">
+                <div className="flex justify-between items-center mb-4">
+                  <Button variant="ghost" size="sm" onClick={() => setSelectedEmail(null)}>
+                    <ChevronDown className="mr-1 h-4 w-4 rotate-90" />
+                    Back
+                  </Button>
+                  
+                  <div className="flex gap-2">
+                    <Button variant="ghost" size="icon" onClick={() => handleStarEmail(selectedEmail.id)}>
+                      <Star className={`h-4 w-4 ${selectedEmail.starred ? 'fill-yellow-400 text-yellow-400' : ''}`} />
+                    </Button>
+                    <Button variant="ghost" size="icon">
+                      <Archive className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon">
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+                
+                <h2 className="text-xl font-bold mb-4">{selectedEmail.subject}</h2>
+                
+                <div className="flex items-center gap-3">
+                  <Avatar>
+                    {selectedEmail.from.avatar ? (
+                      <AvatarImage src={selectedEmail.from.avatar} alt={selectedEmail.from.name} />
+                    ) : (
+                      <AvatarFallback>{selectedEmail.from.name.charAt(0)}</AvatarFallback>
+                    )}
+                  </Avatar>
+                  
+                  <div className="flex-1">
+                    <div className="flex justify-between">
+                      <div>
+                        <span className="font-medium">{selectedEmail.from.name}</span>
+                        <span className="text-sm text-muted-foreground ml-2">&lt;{selectedEmail.from.email}&gt;</span>
+                      </div>
+                      <span className="text-sm text-muted-foreground">
+                        {formatDate(selectedEmail.date)}
+                      </span>
+                    </div>
+                    
+                    <div className="text-sm text-muted-foreground">
+                      to {selectedEmail.to.map(recipient => recipient.name).join(', ')}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="p-6 flex-1 overflow-y-auto">
+                <div dangerouslySetInnerHTML={{ __html: selectedEmail.body }} />
+                
+                {selectedEmail.attachments.length > 0 && (
+                  <div className="mt-6 border-t pt-4">
+                    <h3 className="text-sm font-medium mb-3">Attachments ({selectedEmail.attachments.length})</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {selectedEmail.attachments.map((attachment, index) => (
+                        <div key={index} className="flex items-center p-3 border rounded-lg">
+                          <div className="bg-muted w-10 h-10 rounded flex items-center justify-center mr-3">
+                            <span className="uppercase text-xs font-bold">{attachment.type}</span>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="truncate font-medium">{attachment.name}</p>
+                            <p className="text-xs text-muted-foreground">{attachment.size}</p>
+                          </div>
+                          <Button variant="ghost" size="sm">
+                            Download
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              <div className="p-4 border-t">
+                <Button className="w-full" onClick={() => {
+                  setIsComposeOpen(true);
+                  setIsComposeMinimized(false);
+                }}>
+                  Reply
                 </Button>
               </div>
             </div>
-            
-            <TabsContent value="inbox" className="m-0 flex-1 overflow-auto">
-              <div className="divide-y">
-                {emails.map((email) => (
+          ) : (
+            <div className="h-full flex flex-col">
+              <div className="p-4 border-b">
+                <h2 className="font-medium">{activeFolder.charAt(0).toUpperCase() + activeFolder.slice(1)}</h2>
+              </div>
+              <div className="flex-1 overflow-y-auto">
+                {mockEmails.map((email) => (
                   <div 
                     key={email.id}
-                    className={`p-3 flex gap-3 cursor-pointer hover:bg-muted/50 ${email.unread ? 'bg-muted/30 font-medium' : ''}`}
-                    onClick={() => handleEmailSelect(email)}
+                    className={`p-4 border-b cursor-pointer hover:bg-white/20 transition-colors ${
+                      !email.read ? 'bg-white/10' : ''
+                    }`}
+                    onClick={() => setSelectedEmail(email)}
                   >
-                    <div className="flex flex-col items-center gap-2">
-                      <Checkbox checked={false} />
-                      <Button variant="ghost" size="icon" className="h-6 w-6">
+                    <div className="flex items-center gap-3">
+                      <Button 
+                        variant="ghost" 
+                        size="icon"
+                        className="h-8 w-8"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleStarEmail(email.id);
+                        }}
+                      >
                         <Star className={`h-4 w-4 ${email.starred ? 'fill-yellow-400 text-yellow-400' : ''}`} />
                       </Button>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex justify-between items-start">
-                        <div className="flex items-center gap-2 truncate">
-                          <Avatar className="h-6 w-6">
-                            <AvatarFallback>{email.avatar}</AvatarFallback>
-                          </Avatar>
-                          <span className="truncate">{email.from}</span>
+                      
+                      <Avatar className="h-9 w-9">
+                        {email.from.avatar ? (
+                          <AvatarImage src={email.from.avatar} alt={email.from.name} />
+                        ) : (
+                          <AvatarFallback>{email.from.name.charAt(0)}</AvatarFallback>
+                        )}
+                      </Avatar>
+                      
+                      <div className="flex-1 min-w-0">
+                        <div className="flex justify-between">
+                          <span className={`font-medium ${!email.read ? 'font-semibold' : ''}`}>
+                            {email.from.name}
+                          </span>
+                          <span className="text-sm text-muted-foreground">
+                            {formatDate(email.date)}
+                          </span>
                         </div>
-                        <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">{email.time}</span>
+                        
+                        <div className="text-sm font-medium overflow-hidden text-ellipsis whitespace-nowrap">
+                          {email.subject}
+                        </div>
+                        
+                        <div className="text-sm text-muted-foreground overflow-hidden text-ellipsis whitespace-nowrap">
+                          {email.body.replace(/<[^>]*>/g, '')}
+                        </div>
+                        
+                        {(email.labels.length > 0 || email.attachments.length > 0) && (
+                          <div className="flex gap-2 mt-1">
+                            {email.labels.map((label, index) => (
+                              <span 
+                                key={index}
+                                className="px-2 py-0.5 rounded-full text-xs bg-primary/20 text-primary"
+                              >
+                                {label}
+                              </span>
+                            ))}
+                            
+                            {email.attachments.length > 0 && (
+                              <span className="flex items-center text-xs text-muted-foreground">
+                                <Paperclip className="h-3 w-3 mr-1" />
+                                {email.attachments.length}
+                              </span>
+                            )}
+                          </div>
+                        )}
                       </div>
-                      <h4 className="text-sm truncate mt-1">{email.subject}</h4>
-                      <p className="text-xs text-muted-foreground truncate mt-1">{email.preview}</p>
-                      {email.hasAttachment && (
-                        <div className="mt-1">
-                          <Badge variant="outline" className="text-xs">
-                            <Paperclip className="h-3 w-3 mr-1" />
-                            Attachment
-                          </Badge>
-                        </div>
-                      )}
                     </div>
                   </div>
                 ))}
               </div>
-            </TabsContent>
-            <TabsContent value="starred" className="m-0 p-4 text-center">
-              <h3 className="text-lg font-medium">Starred Messages</h3>
-              <p className="text-sm text-muted-foreground mt-1">Messages you've marked with a star</p>
-            </TabsContent>
-            <TabsContent value="sent" className="m-0 p-4 text-center">
-              <h3 className="text-lg font-medium">Sent Messages</h3>
-              <p className="text-sm text-muted-foreground mt-1">Messages you've sent to others</p>
-            </TabsContent>
-            <TabsContent value="drafts" className="m-0 p-4 text-center">
-              <h3 className="text-lg font-medium">Drafts</h3>
-              <p className="text-sm text-muted-foreground mt-1">Messages you've saved for later</p>
-            </TabsContent>
-            <TabsContent value="archive" className="m-0 p-4 text-center">
-              <h3 className="text-lg font-medium">Archive</h3>
-              <p className="text-sm text-muted-foreground mt-1">Messages you've archived</p>
-            </TabsContent>
-            <TabsContent value="trash" className="m-0 p-4 text-center">
-              <h3 className="text-lg font-medium">Trash</h3>
-              <p className="text-sm text-muted-foreground mt-1">Deleted messages</p>
-            </TabsContent>
-          </Tabs>
-        </div>
-        
-        <div className="flex-1 flex overflow-hidden">
-          {selectedEmail ? (
-            <div className={`flex-1 flex flex-col overflow-auto`}>
-              <div className="p-3 border-b flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setSelectedEmail(null)}>
-                    <ChevronDown className="h-4 w-4 rotate-90" />
-                  </Button>
-                  <Button variant="ghost" size="icon">
-                    <Archive className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="icon">
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="icon">
-                    <Send className="h-4 w-4" />
-                  </Button>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button variant="ghost" size="sm" className="hidden sm:flex items-center gap-2">
-                    <Tag className="h-4 w-4" />
-                    <span>Label</span>
-                  </Button>
-                  <Button variant="ghost" size="icon">
-                    <MoreVertical className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-              <div className="p-6 overflow-auto flex-1">
-                <div className="max-w-3xl mx-auto">
-                  <h1 className="text-2xl font-bold">{selectedEmail.subject}</h1>
-                  <div className="flex items-center justify-between mt-6">
-                    <div className="flex items-center gap-3">
-                      <Avatar>
-                        <AvatarFallback>{selectedEmail.avatar}</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <div className="font-medium">{selectedEmail.from}</div>
-                        <div className="text-sm text-muted-foreground">to me</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <time>{selectedEmail.time}</time>
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
-                        <Star className={`h-4 w-4 ${selectedEmail.starred ? 'fill-yellow-400 text-yellow-400' : ''}`} />
-                      </Button>
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
-                        <MoreVertical className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                  <Separator className="my-6" />
-                  <div className="prose prose-sm max-w-none">
-                    <p>Hello,</p>
-                    <p>
-                      {selectedEmail.preview} Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                      Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
-                      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                    </p>
-                    <p>
-                      Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-                      Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                    </p>
-                    <p>Best regards,<br/>{selectedEmail.from}</p>
-                  </div>
-                  
-                  {selectedEmail.hasAttachment && (
-                    <>
-                      <Separator className="my-6" />
-                      <div className="mt-6">
-                        <h3 className="font-medium mb-3">Attachments (2)</h3>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                          <Card>
-                            <CardContent className="p-3 flex items-center gap-3">
-                              <div className="bg-muted rounded p-2">
-                                <FileText className="h-6 w-6" />
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <div className="font-medium truncate">Presentation.pdf</div>
-                                <div className="text-xs text-muted-foreground">2.4 MB</div>
-                              </div>
-                              <Button variant="ghost" size="icon" className="h-8 w-8">
-                                <Download className="h-4 w-4" />
-                              </Button>
-                            </CardContent>
-                          </Card>
-                          <Card>
-                            <CardContent className="p-3 flex items-center gap-3">
-                              <div className="bg-muted rounded p-2">
-                                <Image className="h-6 w-6" />
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <div className="font-medium truncate">Screenshot.png</div>
-                                <div className="text-xs text-muted-foreground">1.8 MB</div>
-                              </div>
-                              <Button variant="ghost" size="icon" className="h-8 w-8">
-                                <Download className="h-4 w-4" />
-                              </Button>
-                            </CardContent>
-                          </Card>
-                        </div>
-                      </div>
-                    </>
-                  )}
-                  
-                  <Separator className="my-6" />
-                  
-                  <div className="mt-6 flex items-center gap-4">
-                    <Button className="gap-2">
-                      <Send className="h-4 w-4" />
-                      <span>Reply</span>
-                    </Button>
-                    <Button variant="outline" className="gap-2">
-                      <Send className="h-4 w-4 rotate-180" />
-                      <span>Forward</span>
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="flex-1 items-center justify-center p-8 text-center hidden md:flex">
-              <div>
-                <Inbox className="h-12 w-12 mx-auto text-muted-foreground" />
-                <h3 className="mt-4 text-lg font-medium">Select an email to read</h3>
-                <p className="mt-2 text-sm text-muted-foreground">Choose an email from the list to view its contents.</p>
-              </div>
             </div>
           )}
-        </div>
-      </div>
+        </ResizablePanel>
+      </ResizablePanelGroup>
     </div>
   );
 };
