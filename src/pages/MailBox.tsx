@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { useIsMobile } from '@/hooks/use-mobile';
 import { 
   Search, Star, Inbox, Send, Archive, Trash2, AlertCircle, 
   MailPlus, RefreshCcw, MoreVertical, ChevronDown, Tag, User, 
@@ -23,6 +23,7 @@ const MailBox = () => {
   const [composeOpen, setComposeOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("inbox");
   const [showSidebar, setShowSidebar] = useState(true);
+  const isMobile = useIsMobile();
   
   const emails = [
     {
@@ -95,6 +96,20 @@ const MailBox = () => {
   
   const toggleSidebar = () => {
     setShowSidebar(!showSidebar);
+  };
+
+  const handleEmailSelect = (email) => {
+    setSelectedEmail(email);
+    if (isMobile) {
+      setShowSidebar(false);
+    }
+  };
+
+  const handleBackToList = () => {
+    setSelectedEmail(null);
+    if (isMobile) {
+      setShowSidebar(true);
+    }
   };
   
   return (
@@ -198,8 +213,10 @@ const MailBox = () => {
       
       {/* Main Content */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Sidebar */}
-        <div className={`border-r overflow-hidden ${showSidebar ? 'w-60 sm:block' : 'hidden'} ${showSidebar ? 'block' : 'hidden'}`}>
+        {/* Sidebar/Category List */}
+        <div className={`border-r overflow-hidden ${showSidebar ? 'w-60' : 'w-0'} 
+          ${isMobile ? (showSidebar ? 'block' : 'hidden') : 'block'} 
+          transition-all duration-300`}>
           <Tabs defaultValue="inbox" value={activeTab} onValueChange={setActiveTab} orientation="vertical" className="h-full flex flex-col">
             <div className="p-2">
               <Button className="w-full justify-start" onClick={() => setComposeOpen(true)}>
@@ -283,13 +300,14 @@ const MailBox = () => {
               </div>
             </div>
             
+            {/* Tab content section */}
             <TabsContent value="inbox" className="m-0 flex-1 overflow-auto">
               <div className="divide-y">
                 {emails.map((email) => (
                   <div 
                     key={email.id}
                     className={`p-3 flex gap-3 cursor-pointer hover:bg-muted/50 ${email.unread ? 'bg-muted/30 font-medium' : ''}`}
-                    onClick={() => setSelectedEmail(email)}
+                    onClick={() => handleEmailSelect(email)}
                   >
                     <div className="flex flex-col items-center gap-2">
                       <Checkbox checked={false} />
@@ -345,218 +363,138 @@ const MailBox = () => {
           </Tabs>
         </div>
         
-        {/* Email List and Content */}
-        <div className="flex-1 flex overflow-hidden">
-          <Tabs defaultValue="inbox" value={activeTab} className="flex-1 flex flex-col">
-            {/* Email List */}
-            <div className={`${selectedEmail && 'hidden md:block'} border-r w-full md:w-96 overflow-auto`}>
-              <div className="p-2 border-b flex items-center justify-between">
+        {/* Email Content */}
+        <div 
+          className={`flex-1 flex flex-col overflow-hidden ${isMobile && !selectedEmail ? 'hidden' : 'block'}`}
+        >
+          {selectedEmail ? (
+            <div className="flex-1 flex flex-col overflow-auto">
+              <div className="p-3 border-b flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Checkbox />
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
-                    <RefreshCcw className="h-4 w-4" />
+                  <Button variant="ghost" size="icon" className="md:hidden" onClick={handleBackToList}>
+                    <ChevronDown className="h-4 w-4 rotate-90" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <Button variant="ghost" size="icon">
+                    <Archive className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="icon">
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="icon">
+                    <Send className="h-4 w-4" />
+                  </Button>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button variant="ghost" size="sm" className="hidden sm:flex items-center gap-2">
+                    <Tag className="h-4 w-4" />
+                    <span>Label</span>
+                  </Button>
+                  <Button variant="ghost" size="icon">
                     <MoreVertical className="h-4 w-4" />
                   </Button>
                 </div>
-                <div>
-                  <Button variant="ghost" size="sm">
-                    1-6 of 124
-                  </Button>
-                </div>
               </div>
-              <TabsContent value="inbox" className="m-0">
-                <div className="divide-y">
-                  {emails.map((email) => (
-                    <div 
-                      key={email.id}
-                      className={`p-3 flex gap-3 cursor-pointer hover:bg-muted/50 ${email.unread ? 'bg-muted/30 font-medium' : ''}`}
-                      onClick={() => setSelectedEmail(email)}
-                    >
-                      <div className="flex flex-col items-center gap-2">
-                        <Checkbox checked={false} />
-                        <Button variant="ghost" size="icon" className="h-6 w-6">
-                          <Star className={`h-4 w-4 ${email.starred ? 'fill-yellow-400 text-yellow-400' : ''}`} />
-                        </Button>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex justify-between items-start">
-                          <div className="flex items-center gap-2 truncate">
-                            <Avatar className="h-6 w-6">
-                              <AvatarFallback>{email.avatar}</AvatarFallback>
-                            </Avatar>
-                            <span className="truncate">{email.from}</span>
-                          </div>
-                          <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">{email.time}</span>
-                        </div>
-                        <h4 className="text-sm truncate mt-1">{email.subject}</h4>
-                        <p className="text-xs text-muted-foreground truncate mt-1">{email.preview}</p>
-                        {email.hasAttachment && (
-                          <div className="mt-1">
-                            <Badge variant="outline" className="text-xs">
-                              <Paperclip className="h-3 w-3 mr-1" />
-                              Attachment
-                            </Badge>
-                          </div>
-                        )}
+              <div className="p-4 sm:p-6 overflow-auto flex-1">
+                <div className="max-w-3xl mx-auto">
+                  <h1 className="text-xl sm:text-2xl font-bold">{selectedEmail.subject}</h1>
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mt-6">
+                    <div className="flex items-center gap-3">
+                      <Avatar>
+                        <AvatarFallback>{selectedEmail.avatar}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <div className="font-medium">{selectedEmail.from}</div>
+                        <div className="text-sm text-muted-foreground">to me</div>
                       </div>
                     </div>
-                  ))}
-                </div>
-              </TabsContent>
-              <TabsContent value="starred" className="m-0 p-4 text-center">
-                <h3 className="text-lg font-medium">Starred Messages</h3>
-                <p className="text-sm text-muted-foreground mt-1">Messages you've marked with a star</p>
-              </TabsContent>
-              <TabsContent value="sent" className="m-0 p-4 text-center">
-                <h3 className="text-lg font-medium">Sent Messages</h3>
-                <p className="text-sm text-muted-foreground mt-1">Messages you've sent to others</p>
-              </TabsContent>
-              <TabsContent value="drafts" className="m-0 p-4 text-center">
-                <h3 className="text-lg font-medium">Drafts</h3>
-                <p className="text-sm text-muted-foreground mt-1">Messages you've saved for later</p>
-              </TabsContent>
-              <TabsContent value="archive" className="m-0 p-4 text-center">
-                <h3 className="text-lg font-medium">Archive</h3>
-                <p className="text-sm text-muted-foreground mt-1">Messages you've archived</p>
-              </TabsContent>
-              <TabsContent value="trash" className="m-0 p-4 text-center">
-                <h3 className="text-lg font-medium">Trash</h3>
-                <p className="text-sm text-muted-foreground mt-1">Deleted messages</p>
-              </TabsContent>
-            </div>
-            
-            {/* Email Content */}
-            {selectedEmail ? (
-              <div className={`${selectedEmail ? 'block' : 'hidden md:block'} flex-1 flex flex-col overflow-auto`}>
-                <div className="p-3 border-b flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setSelectedEmail(null)}>
-                      <ChevronDown className="h-4 w-4 rotate-90" />
-                    </Button>
-                    <Button variant="ghost" size="icon">
-                      <Archive className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="icon">
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="icon">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground mt-2 sm:mt-0">
+                      <time>{selectedEmail.time}</time>
+                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <Star className={`h-4 w-4 ${selectedEmail.starred ? 'fill-yellow-400 text-yellow-400' : ''}`} />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                  <Separator className="my-6" />
+                  <div className="prose prose-sm max-w-none">
+                    <p>Hello,</p>
+                    <p>
+                      {selectedEmail.preview} Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                      Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
+                      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    </p>
+                    <p>
+                      Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+                      Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    </p>
+                    <p>Best regards,<br/>{selectedEmail.from}</p>
+                  </div>
+                  
+                  {selectedEmail.hasAttachment && (
+                    <>
+                      <Separator className="my-6" />
+                      <div className="mt-6">
+                        <h3 className="font-medium mb-3">Attachments (2)</h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <Card>
+                            <CardContent className="p-3 flex items-center gap-3">
+                              <div className="bg-muted rounded p-2">
+                                <FileText className="h-6 w-6" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="font-medium truncate">Presentation.pdf</div>
+                                <div className="text-xs text-muted-foreground">2.4 MB</div>
+                              </div>
+                              <Button variant="ghost" size="icon" className="h-8 w-8">
+                                <Download className="h-4 w-4" />
+                              </Button>
+                            </CardContent>
+                          </Card>
+                          <Card>
+                            <CardContent className="p-3 flex items-center gap-3">
+                              <div className="bg-muted rounded p-2">
+                                <Image className="h-6 w-6" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="font-medium truncate">Screenshot.png</div>
+                                <div className="text-xs text-muted-foreground">1.8 MB</div>
+                              </div>
+                              <Button variant="ghost" size="icon" className="h-8 w-8">
+                                <Download className="h-4 w-4" />
+                              </Button>
+                            </CardContent>
+                          </Card>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  
+                  <Separator className="my-6" />
+                  
+                  <div className="mt-6 flex items-center gap-4">
+                    <Button className="gap-2">
                       <Send className="h-4 w-4" />
+                      <span>Reply</span>
                     </Button>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="sm" className="hidden sm:flex items-center gap-2">
-                      <Tag className="h-4 w-4" />
-                      <span>Label</span>
+                    <Button variant="outline" className="gap-2">
+                      <Send className="h-4 w-4 rotate-180" />
+                      <span>Forward</span>
                     </Button>
-                    <Button variant="ghost" size="icon">
-                      <MoreVertical className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-                <div className="p-6 overflow-auto flex-1">
-                  <div className="max-w-3xl mx-auto">
-                    <h1 className="text-2xl font-bold">{selectedEmail.subject}</h1>
-                    <div className="flex items-center justify-between mt-6">
-                      <div className="flex items-center gap-3">
-                        <Avatar>
-                          <AvatarFallback>{selectedEmail.avatar}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <div className="font-medium">{selectedEmail.from}</div>
-                          <div className="text-sm text-muted-foreground">to me</div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <time>{selectedEmail.time}</time>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <Star className={`h-4 w-4 ${selectedEmail.starred ? 'fill-yellow-400 text-yellow-400' : ''}`} />
-                        </Button>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <MoreVertical className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                    <Separator className="my-6" />
-                    <div className="prose prose-sm max-w-none">
-                      <p>Hello,</p>
-                      <p>
-                        {selectedEmail.preview} Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
-                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                      </p>
-                      <p>
-                        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-                        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                      </p>
-                      <p>Best regards,<br/>{selectedEmail.from}</p>
-                    </div>
-                    
-                    {selectedEmail.hasAttachment && (
-                      <>
-                        <Separator className="my-6" />
-                        <div className="mt-6">
-                          <h3 className="font-medium mb-3">Attachments (2)</h3>
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <Card>
-                              <CardContent className="p-3 flex items-center gap-3">
-                                <div className="bg-muted rounded p-2">
-                                  <FileText className="h-6 w-6" />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                  <div className="font-medium truncate">Presentation.pdf</div>
-                                  <div className="text-xs text-muted-foreground">2.4 MB</div>
-                                </div>
-                                <Button variant="ghost" size="icon" className="h-8 w-8">
-                                  <Download className="h-4 w-4" />
-                                </Button>
-                              </CardContent>
-                            </Card>
-                            <Card>
-                              <CardContent className="p-3 flex items-center gap-3">
-                                <div className="bg-muted rounded p-2">
-                                  <Image className="h-6 w-6" />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                  <div className="font-medium truncate">Screenshot.png</div>
-                                  <div className="text-xs text-muted-foreground">1.8 MB</div>
-                                </div>
-                                <Button variant="ghost" size="icon" className="h-8 w-8">
-                                  <Download className="h-4 w-4" />
-                                </Button>
-                              </CardContent>
-                            </Card>
-                          </div>
-                        </div>
-                      </>
-                    )}
-                    
-                    <Separator className="my-6" />
-                    
-                    <div className="mt-6 flex items-center gap-4">
-                      <Button className="gap-2">
-                        <Send className="h-4 w-4" />
-                        <span>Reply</span>
-                      </Button>
-                      <Button variant="outline" className="gap-2">
-                        <Send className="h-4 w-4 rotate-180" />
-                        <span>Forward</span>
-                      </Button>
-                    </div>
                   </div>
                 </div>
               </div>
-            ) : (
-              <div className="hidden md:flex flex-1 items-center justify-center p-8 text-center">
-                <div>
-                  <Inbox className="h-12 w-12 mx-auto text-muted-foreground" />
-                  <h3 className="mt-4 text-lg font-medium">Select an email to read</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">Choose an email from the list to view its contents.</p>
-                </div>
+            </div>
+          ) : (
+            <div className="hidden md:flex flex-1 items-center justify-center p-8 text-center">
+              <div>
+                <Inbox className="h-12 w-12 mx-auto text-muted-foreground" />
+                <h3 className="mt-4 text-lg font-medium">Select an email to read</h3>
+                <p className="mt-2 text-sm text-muted-foreground">Choose an email from the list to view its contents.</p>
               </div>
-            )}
-          </Tabs>
+            </div>
+          )}
         </div>
       </div>
     </div>
