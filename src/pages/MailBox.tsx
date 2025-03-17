@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,7 +13,8 @@ import {
   Search, Star, Inbox, Send, Archive, Trash2, AlertCircle, 
   MailPlus, RefreshCcw, MoreVertical, ChevronDown, Tag, User, 
   Clock, Paperclip, Bold, Italic, Underline, List, ListOrdered, 
-  Trash, Link, Image, AlignLeft, AlignCenter, AlignRight, Sparkles
+  Trash, Link, Image, AlignLeft, AlignCenter, AlignRight, Sparkles,
+  FileText, Download
 } from 'lucide-react';
 
 const MailBox = () => {
@@ -501,3 +501,4 @@ const MailBox = () => {
 };
 
 export default MailBox;
+
