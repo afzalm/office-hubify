@@ -98,7 +98,6 @@ const MailBox = () => {
   
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      {/* Toolbar */}
       <div className="flex items-center justify-between p-2 border-b">
         <div className="flex items-center gap-2">
           <Button variant="outline" size="icon" onClick={toggleSidebar} className="lg:hidden">
@@ -188,16 +187,13 @@ const MailBox = () => {
             </DrawerContent>
           </Drawer>
           
-          {/* Mobile compose button */}
           <Button variant="outline" size="icon" className="sm:hidden" onClick={() => setComposeOpen(true)}>
             <MailPlus className="h-4 w-4" />
           </Button>
         </div>
       </div>
       
-      {/* Main Content */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Sidebar */}
         <div className={`border-r overflow-hidden ${showSidebar ? 'w-60 sm:block' : 'hidden'} ${showSidebar ? 'block' : 'hidden'}`}>
           <Tabs defaultValue="inbox" value={activeTab} onValueChange={setActiveTab} orientation="vertical" className="h-full flex flex-col">
             <div className="p-2">
@@ -344,70 +340,9 @@ const MailBox = () => {
           </Tabs>
         </div>
         
-        {/* Email List and Content */}
         <div className="flex-1 flex overflow-hidden">
-          {/* Email List */}
-          <div className={`${selectedEmail && 'hidden md:block'} border-r w-full md:w-96 overflow-auto`}>
-            <div className="p-2 border-b flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Checkbox />
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <RefreshCcw className="h-4 w-4" />
-                </Button>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <MoreVertical className="h-4 w-4" />
-                </Button>
-              </div>
-              <div>
-                <Button variant="ghost" size="sm">
-                  1-6 of 124
-                </Button>
-              </div>
-            </div>
-            
-            {/* This is where the MailBox list content goes */}
-            <div className="divide-y">
-              {emails.map((email) => (
-                <div 
-                  key={email.id}
-                  className={`p-3 flex gap-3 cursor-pointer hover:bg-muted/50 ${email.unread ? 'bg-muted/30 font-medium' : ''}`}
-                  onClick={() => setSelectedEmail(email)}
-                >
-                  <div className="flex flex-col items-center gap-2">
-                    <Checkbox checked={false} />
-                    <Button variant="ghost" size="icon" className="h-6 w-6">
-                      <Star className={`h-4 w-4 ${email.starred ? 'fill-yellow-400 text-yellow-400' : ''}`} />
-                    </Button>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex justify-between items-start">
-                      <div className="flex items-center gap-2 truncate">
-                        <Avatar className="h-6 w-6">
-                          <AvatarFallback>{email.avatar}</AvatarFallback>
-                        </Avatar>
-                        <span className="truncate">{email.from}</span>
-                      </div>
-                      <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">{email.time}</span>
-                    </div>
-                    <h4 className="text-sm truncate mt-1">{email.subject}</h4>
-                      <p className="text-xs text-muted-foreground truncate mt-1">{email.preview}</p>
-                      {email.hasAttachment && (
-                        <div className="mt-1">
-                          <Badge variant="outline" className="text-xs">
-                            <Paperclip className="h-3 w-3 mr-1" />
-                            Attachment
-                          </Badge>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          
-          {/* Email Content */}
           {selectedEmail ? (
-            <div className={`${selectedEmail ? 'block' : 'hidden md:block'} flex-1 flex flex-col overflow-auto`}>
+            <div className={`flex-1 flex flex-col overflow-auto`}>
               <div className="p-3 border-b flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setSelectedEmail(null)}>
