@@ -113,12 +113,6 @@ const MailBox = () => {
             <RefreshCcw className="h-4 w-4" />
           </Button>
           <Drawer open={composeOpen} onOpenChange={setComposeOpen}>
-            <DrawerTrigger asChild>
-              <Button className="hidden sm:flex items-center gap-2">
-                <MailPlus className="h-4 w-4" />
-                <span>Compose</span>
-              </Button>
-            </DrawerTrigger>
             <DrawerContent className="h-[80vh] sm:h-[70vh]">
               <DrawerHeader className="border-b px-4 py-3">
                 <DrawerTitle>New Message</DrawerTitle>
