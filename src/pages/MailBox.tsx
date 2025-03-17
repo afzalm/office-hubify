@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,6 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { 
   Search, Star, Inbox, Send, Archive, Trash2, AlertCircle, 
   MailPlus, RefreshCcw, MoreVertical, ChevronDown, Tag, User, 
@@ -22,6 +24,7 @@ const MailBox = () => {
   const [composeOpen, setComposeOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("inbox");
   const [showSidebar, setShowSidebar] = useState(true);
+  const isMobile = useIsMobile();
   
   const emails = [
     {
@@ -94,6 +97,10 @@ const MailBox = () => {
   
   const toggleSidebar = () => {
     setShowSidebar(!showSidebar);
+  };
+  
+  const handleEmailSelect = (email) => {
+    setSelectedEmail(email);
   };
   
   return (
@@ -278,7 +285,7 @@ const MailBox = () => {
                   <div 
                     key={email.id}
                     className={`p-3 flex gap-3 cursor-pointer hover:bg-muted/50 ${email.unread ? 'bg-muted/30 font-medium' : ''}`}
-                    onClick={() => setSelectedEmail(email)}
+                    onClick={() => handleEmailSelect(email)}
                   >
                     <div className="flex flex-col items-center gap-2">
                       <Checkbox checked={false} />
@@ -455,7 +462,7 @@ const MailBox = () => {
               </div>
             </div>
           ) : (
-            <div className="hidden md:flex flex-1 items-center justify-center p-8 text-center">
+            <div className="flex-1 items-center justify-center p-8 text-center hidden md:flex">
               <div>
                 <Inbox className="h-12 w-12 mx-auto text-muted-foreground" />
                 <h3 className="mt-4 text-lg font-medium">Select an email to read</h3>
