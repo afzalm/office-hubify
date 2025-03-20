@@ -47,45 +47,45 @@
     --sidebar-ring: 240 10% 3.9%;
   }
 
-  /* IBM theme */
-  [data-theme="ibm"] {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 15%;
+  /* Cool Blue theme */
+  [data-theme="coolBlue"] {
+    --background: 210 50% 98%;
+    --foreground: 214 60% 20%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 15%;
+    --card-foreground: 214 60% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 15%;
+    --popover-foreground: 214 60% 20%;
 
-    --primary: 217 100% 41%;  /* IBM Blue #0043CE */
+    --primary: 210 100% 45%;  /* Vibrant Blue #0066CC */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 204 86% 53%;  /* Lighter IBM Blue #1192E8 */
-    --secondary-foreground: 0 0% 15%;
+    --secondary: 199 98% 48%;  /* Light Blue #00A3E0 */
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 0 0% 96%;  /* Light Gray #F4F4F4 */
-    --muted-foreground: 0 0% 45%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 25% 40%;
 
-    --accent: 53 100% 50%;  /* IBM Yellow #FFE100 */
-    --accent-foreground: 217 100% 41%;
+    --accent: 217 91% 60%;  /* Accent Blue #3B82F6 */
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 217 100% 41%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 221 83% 53%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 217 100% 41%;  /* IBM Blue #0043CE */
+    --sidebar-background: 210 100% 45%;  /* Vibrant Blue Sidebar */
     --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 53 100% 50%;  /* IBM Yellow #FFE100 */
-    --sidebar-primary-foreground: 217 100% 41%;
-    --sidebar-accent: 204 86% 53%;  /* Lighter IBM Blue #1192E8 */
+    --sidebar-primary: 199 98% 48%;  /* Light Blue */
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 217 91% 60%;  /* Accent Blue */
     --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 217 70% 50%;
+    --sidebar-border: 210 90% 40%;
     --sidebar-ring: 0 0% 100%;
   }
 
@@ -142,8 +142,8 @@
     background-attachment: fixed;
   }
   
-  [data-theme="ibm"] body {
-    background-image: linear-gradient(to right, rgba(0, 67, 206, 0.1), rgba(17, 146, 232, 0.1));
+  [data-theme="coolBlue"] body {
+    background-image: linear-gradient(to right, rgba(0, 102, 204, 0.05), rgba(0, 163, 224, 0.1));
     background-size: cover;
     background-position: center;
     background-attachment: fixed;

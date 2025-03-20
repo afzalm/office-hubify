@@ -43,7 +43,7 @@ const Settings = () => {
                     </Label>
                     <RadioGroup 
                       value={theme} 
-                      onValueChange={(value) => setTheme(value as 'default' | 'ibm')}
+                      onValueChange={(value) => setTheme(value as 'default' | 'coolBlue')}
                       className="grid grid-cols-1 md:grid-cols-2 gap-4"
                     >
                       <div className="relative">
@@ -67,21 +67,21 @@ const Settings = () => {
                       </div>
                       
                       <div className="relative">
-                        <RadioGroupItem value="ibm" id="ibm" className="peer sr-only" />
+                        <RadioGroupItem value="coolBlue" id="coolBlue" className="peer sr-only" />
                         <Label 
-                          htmlFor="ibm" 
+                          htmlFor="coolBlue" 
                           className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
                         >
                           <div className="mb-3 w-full space-y-2">
-                            <div className="w-full h-6 rounded-md bg-[#0043CE]"></div>
+                            <div className="w-full h-6 rounded-md bg-[#0066CC]"></div>
                             <div className="flex gap-2">
-                              <div className="w-1/3 h-4 rounded-md bg-[#1192E8]"></div>
-                              <div className="w-1/3 h-4 rounded-md bg-[#FFE100]"></div>
+                              <div className="w-1/3 h-4 rounded-md bg-[#00A3E0]"></div>
+                              <div className="w-1/3 h-4 rounded-md bg-[#3B82F6]"></div>
                             </div>
                           </div>
                           <div className="flex w-full items-center justify-between">
-                            <span>IBM Theme</span>
-                            {theme === 'ibm' && <Check className="h-4 w-4" />}
+                            <span>Cool Blue Theme</span>
+                            {theme === 'coolBlue' && <Check className="h-4 w-4" />}
                           </div>
                         </Label>
                       </div>

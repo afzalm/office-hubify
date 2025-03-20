@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-type Theme = 'default' | 'ibm';
+type Theme = 'default' | 'coolBlue';
 
 interface ThemeContextType {
   theme: Theme;
