@@ -18,41 +18,45 @@ import MailBox from "./pages/MailBox";
 import Directory from "./pages/Directory";
 import MIS from "./pages/MIS";
 import Requisition from "./pages/Requisition";
+import Settings from "./pages/Settings";
+import { ThemeProvider } from "./contexts/ThemeContext";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          
-          {/* Dashboard routes - wrapped in AppLayout */}
-          <Route element={<AppLayout />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/timesheet" element={<Timesheet />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/ai-assistant" element={<AIAssistant />} />
-            <Route path="/document-manager" element={<DocumentManager />} />
-            <Route path="/handy-tools" element={<HandyTools />} />
-            <Route path="/hr" element={<Index />} />
-            <Route path="/mailbox" element={<MailBox />} />
-            <Route path="/directory" element={<Directory />} />
-            <Route path="/referrals" element={<Index />} />
-            <Route path="/mis" element={<MIS />} />
-            <Route path="/requisition" element={<Requisition />} />
-            <Route path="/settings" element={<Index />} />
-          </Route>
-          
-          {/* Catch-all route */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+    <ThemeProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            
+            {/* Dashboard routes - wrapped in AppLayout */}
+            <Route element={<AppLayout />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/timesheet" element={<Timesheet />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="/analytics" element={<Analytics />} />
+              <Route path="/ai-assistant" element={<AIAssistant />} />
+              <Route path="/document-manager" element={<DocumentManager />} />
+              <Route path="/handy-tools" element={<HandyTools />} />
+              <Route path="/hr" element={<Index />} />
+              <Route path="/mailbox" element={<MailBox />} />
+              <Route path="/directory" element={<Directory />} />
+              <Route path="/referrals" element={<Index />} />
+              <Route path="/mis" element={<MIS />} />
+              <Route path="/requisition" element={<Requisition />} />
+              <Route path="/settings" element={<Settings />} />
+            </Route>
+            
+            {/* Catch-all route */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 

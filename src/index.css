@@ -47,6 +47,48 @@
     --sidebar-ring: 240 10% 3.9%;
   }
 
+  /* IBM theme */
+  [data-theme="ibm"] {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 15%;
+
+    --primary: 217 100% 41%;  /* IBM Blue #0043CE */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 204 86% 53%;  /* Lighter IBM Blue #1192E8 */
+    --secondary-foreground: 0 0% 15%;
+
+    --muted: 0 0% 96%;  /* Light Gray #F4F4F4 */
+    --muted-foreground: 0 0% 45%;
+
+    --accent: 53 100% 50%;  /* IBM Yellow #FFE100 */
+    --accent-foreground: 217 100% 41%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 217 100% 41%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 217 100% 41%;  /* IBM Blue #0043CE */
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 53 100% 50%;  /* IBM Yellow #FFE100 */
+    --sidebar-primary-foreground: 217 100% 41%;
+    --sidebar-accent: 204 86% 53%;  /* Lighter IBM Blue #1192E8 */
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 217 70% 50%;
+    --sidebar-ring: 0 0% 100%;
+  }
+
   .dark {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
@@ -95,6 +137,13 @@
   body {
     @apply bg-background text-foreground font-sans antialiased;
     background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+  }
+  
+  [data-theme="ibm"] body {
+    background-image: linear-gradient(to right, rgba(0, 67, 206, 0.1), rgba(17, 146, 232, 0.1));
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
